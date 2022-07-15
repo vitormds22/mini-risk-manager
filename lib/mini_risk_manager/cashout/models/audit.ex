@@ -14,8 +14,8 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
     timestamps(updated_at: false)
   end
 
-  def create_changeset(audit, attrs) do
-    audit
+  def create_changeset(attrs) do
+    %__MODULE__{}
     |> cast(attrs, @required_keys)
     |> validate_required(@required_keys)
   end
