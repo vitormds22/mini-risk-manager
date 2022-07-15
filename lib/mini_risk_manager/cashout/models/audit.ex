@@ -1,4 +1,4 @@
-defmodule MiniRiskManager.Audit do
+defmodule MiniRiskManager.Cashout.Models.Audit do
   use Ecto.Schema
   import Ecto.Changeset
 
