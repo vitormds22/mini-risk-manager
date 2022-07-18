@@ -1,6 +1,5 @@
 defmodule MiniRiskManagerAdapters.BalanceBlokerPort.Transfers do
   @moduledoc """
-  Edit later
-  Receive a behaviour them implment the businness logic
+  Receive a behaviour them implement the businness logic
   """
 end
