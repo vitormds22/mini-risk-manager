@@ -11,7 +11,8 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
           input_params: map(),
           model_input: map(),
           model_response: map(),
-          is_valid: String.t()
+          is_valid: String.t(),
+          inserted_at: DateTime.t()
         }
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
