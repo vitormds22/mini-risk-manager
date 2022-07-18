@@ -8,7 +8,7 @@ defmodule MiniRiskManager.Repo.Migrations.AddAuditTable do
       add :model_input, :map, null: false
       add :model_response, :map, null: false
       add :is_valid, :boolean, null: false
-      
+
       timestamps(updated_at: false)
     end
   end
