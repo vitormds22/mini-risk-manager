@@ -1,4 +1,5 @@
 defmodule MiniRiskManagerWeb.Telemetry do
+  @moduledoc false
   use Supervisor
   import Telemetry.Metrics
 
@@ -20,6 +21,7 @@ defmodule MiniRiskManagerWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @spec metrics :: [Telemetry.Metrics.Summary.t(), ...]
   def metrics do
     [
       # Phoenix Metrics
