@@ -17,6 +17,9 @@ defmodule MiniRiskManagerWeb do
   and import those modules here.
   """
 
+  @spec controller ::
+          {:__block__, [],
+           [{:alias, [...], [...]} | {:import, [...], [...]} | {:use, [...], [...]}, ...]}
   def controller do
     quote do
       use Phoenix.Controller, namespace: MiniRiskManagerWeb
@@ -27,6 +30,9 @@ defmodule MiniRiskManagerWeb do
     end
   end
 
+  @spec view ::
+          {:__block__, [],
+           [{:__block__, [], [...]} | {:import, [...], [...]} | {:use, [...], [...]}, ...]}
   def view do
     quote do
       use Phoenix.View,
@@ -42,6 +48,7 @@ defmodule MiniRiskManagerWeb do
     end
   end
 
+  @spec router :: {:__block__, [], [{:import, [...], [...]} | {:use, [...], [...]}, ...]}
   def router do
     quote do
       use Phoenix.Router
@@ -51,6 +58,7 @@ defmodule MiniRiskManagerWeb do
     end
   end
 
+  @spec channel :: {:__block__, [], [{:import, [...], [...]} | {:use, [...], [...]}, ...]}
   def channel do
     quote do
       use Phoenix.Channel
