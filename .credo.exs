@@ -134,8 +134,7 @@
         {Credo.Check.Refactor.NegatedConditionsInUnless, []},
         {Credo.Check.Refactor.NegatedConditionsWithElse, []},
         {Credo.Check.Refactor.Nesting, []},
-        {Credo.Check.Refactor.PipeChainStart,
-         excluded_argument_types: [], excluded_functions: []},
+        {Credo.Check.Refactor.PipeChainStart, excluded_argument_types: [], excluded_functions: []},
         {Credo.Check.Refactor.UnlessWithElse, []},
         {Credo.Check.Refactor.WithClauses, []},
 
