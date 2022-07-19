@@ -17,3 +17,18 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+## To do list
+
+  * Criar projeto com mix phx.new :done
+  * Configurar credo e dialyzer :done
+  * Criar tabela audits :done
+  * Criar model audit :done
+  * Criar port/adpter ModelPort :ongoin
+  * Criar port/adpter BalanceBlockerPort
+  * Criar aggregator para audit
+  * Criar repository para audit
+  * Criar command para bloquear saldo
+  * Criar job para bloquear saldo
+  * Criar command para validar o risco
+  * Criar rota de serviço
