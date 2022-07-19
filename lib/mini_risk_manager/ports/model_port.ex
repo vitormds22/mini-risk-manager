@@ -1,5 +1,8 @@
 defmodule MiniRiskManager.Ports.ModelPort do
-
+  @moduledoc """
+  Port for call fraud model
+  """
+  
   @callback call_model(ModelInput.t()) :: {:ok, ModelResponse.t() | {:error, :bad_request | :request_failed}}
 
   def call_model(params) do
