@@ -7,16 +7,14 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
     quote location: :keep do
       alias MiniRiskManager.Cashout.Models.Audit
 
-      def mini_risk_manager_audit_factory(params \\ %{}) do
-        merge_attributes(
-          %Audit{
-            id: Ecto.UUID.generate(),
-            input_params: %{},
-            model_input: %{},
-            model_response: %{},
-            is_valid: "true",
-          }, params
-        )
+      def mini_risk_manager_audit_factory do
+        %Audit{
+          id: Ecto.UUID.generate(),
+          input_params: %{},
+          model_input: %{},
+          model_response: %{},
+          is_valid: "true",
+        }
       end
     end
   end
