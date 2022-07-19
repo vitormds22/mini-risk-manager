@@ -1,7 +1,5 @@
 defmodule MiniRiskManager.Cashout.Models.AuditTest do
-  @moduledoc """
-  Tests for model Audit
-  """
+  @moduledoc false
 
   use MiniRiskManager.DataCase, async: true
   alias MiniRiskManager.Cashout.Models.Audit
