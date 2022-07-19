@@ -24,6 +24,7 @@ defmodule MiniRiskManager.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import MiniRiskManager.DataCase
+      import MiniRiskManager.Factory
     end
   end
 
