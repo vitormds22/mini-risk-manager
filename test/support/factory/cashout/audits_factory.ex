@@ -13,7 +13,7 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
           input_params: %{},
           model_input: %{},
           model_response: %{},
-          is_valid: "true",
+          is_valid: "true"
         }
       end
     end
