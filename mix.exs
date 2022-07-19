@@ -45,7 +45,8 @@ defmodule MiniRiskManager.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
-      {:sobelow, "~> 0.8", only: :dev}
+      {:sobelow, "~> 0.8", only: :dev},
+      {:ex_machina, "~> 2.7.0", only: [:test, :dev], runtime: false}
     ]
   end
 
