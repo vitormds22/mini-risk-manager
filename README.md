@@ -20,7 +20,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## To do list
 
-  * Criar projeto com mix phx.new :done
+  * Criar projeto com mix phx.new :heavy_check_mark:
   * Configurar credo e dialyzer :done
   * Criar tabela audits :done
   * Criar model audit :done
