@@ -1,7 +1,9 @@
 defmodule MiniRiskManagerWeb.Telemetry do
+  @moduledoc false
   use Supervisor
   import Telemetry.Metrics
 
+  @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(arg) do
     Supervisor.start_link(__MODULE__, arg, name: __MODULE__)
   end
@@ -19,6 +21,7 @@ defmodule MiniRiskManagerWeb.Telemetry do
     Supervisor.init(children, strategy: :one_for_one)
   end
 
+  @spec metrics :: [Telemetry.Metrics.Summary.t(), ...]
   def metrics do
     [
       # Phoenix Metrics
@@ -49,8 +52,7 @@ defmodule MiniRiskManagerWeb.Telemetry do
       ),
       summary("mini_risk_manager.repo.query.idle_time",
         unit: {:native, :millisecond},
-        description:
-          "The time the connection spent waiting before being checked out for the query"
+        description: "The time the connection spent waiting before being checked out for the query"
       ),
 
       # VM Metrics
