@@ -4,15 +4,13 @@ defmodule MiniRiskManager.Cashout.Models.AuditTest do
   """
 
   use MiniRiskManager.DataCase, async: true
-  import MiniRiskManager.Factory.Cashout.AuditsFactory
-
   alias MiniRiskManager.Cashout.Models.Audit
+
   @err_cant_be_blank "can't be blank"
 
   describe "create_changeset/1" do
     test "When missing required attrs return a invalid changeset" do
-      # audit = params_for(:cashout_audit, input_params: nil, model_input: nil, model_response: nil)
-      audit = %{is_valid: true}
+      audit = params_for(:mini_risk_manager_audit, input_params: nil, model_input: nil, model_response: nil)
 
       assert %Ecto.Changeset{
                valid?: false,
@@ -25,22 +23,9 @@ defmodule MiniRiskManager.Cashout.Models.AuditTest do
     end
 
     test "When passed all required attrs return a valid changeset" do
-      audit = %{
-        input_params: %{},
-        model_input: %{},
-        model_response: %{},
-        is_valid: true
-      }
+      audit = params_for(:mini_risk_manager_audit)
 
-      assert %Ecto.Changeset{
-               valid?: true,
-               changes: %{
-                  input_params: %{},
-                  is_valid: true,
-                  model_input: %{},
-                  model_response: %{}
-               },
-             } = Audit.create_changeset(audit)
+      assert %Ecto.Changeset{valid?: true} = Audit.create_changeset(audit)
     end
   end
 end
