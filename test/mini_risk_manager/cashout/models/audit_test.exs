@@ -8,7 +8,13 @@ defmodule MiniRiskManager.Cashout.Models.AuditTest do
 
   describe "create_changeset/1" do
     test "When missing required attrs return a invalid changeset" do
-      audit = params_for(:mini_risk_manager_audit, input_params: nil, model_input: nil, model_response: nil)
+      audit =
+        params_for(
+          :mini_risk_manager_audit,
+          input_params: nil,
+          model_input: nil,
+          model_response: nil
+        )
 
       assert %Ecto.Changeset{
                valid?: false,
