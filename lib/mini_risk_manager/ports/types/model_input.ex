@@ -1,10 +1,9 @@
 defmodule MiniRiskManager.Ports.Types.ModelInput do
   @type t() :: %__MODULE__{
-    id: Ecto.UUID.t(),
-    operation_type: Ecto.Enum, values: [:inbound_pix_payment, :inbound_external_transfer],
+    operation_type: String.t(),
     amount: integer(),
     balance: integer(),
-    account_type: Ecto.Enum, values: [:CC, :PP, :PG] | nil,
+    account_type: String.t() | nil,
     sum_amount_last_24h: integer()
   }
 
