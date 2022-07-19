@@ -21,10 +21,10 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 ## To do list
 
   * Criar projeto com mix phx.new :heavy_check_mark:
-  * Configurar credo e dialyzer :done
-  * Criar tabela audits :done
-  * Criar model audit :done
-  * Criar port/adpter ModelPort :ongoin
+  * Configurar credo e dialyzer :heavy_check_mark:
+  * Criar tabela audits :heavy_check_mark:
+  * Criar model audit :heavy_check_mark:
+  * Criar port/adpter ModelPort :man_technologist:
   * Criar port/adpter BalanceBlockerPort
   * Criar aggregator para audit
   * Criar repository para audit
