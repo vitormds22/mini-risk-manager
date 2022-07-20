@@ -1,4 +1,6 @@
 defmodule MiniRiskManager.Ports.Types.ModelInput do
+  @derive Jason.Encoder
+
   @type t() :: %__MODULE__{
           operation_type: String.t(),
           amount: integer(),
