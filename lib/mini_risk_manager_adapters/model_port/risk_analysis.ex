@@ -13,19 +13,14 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   @behaviour MiniRiskManager.Ports.ModelPort
 
   @impl true
-
-  @spec call_model(struct() | ModelInput.t()) ::
-          {:error, :bad_request | :internal_server_error}
-          | {:ok, ModelResponse.t()}
-
-  def call_model(payload) when is_struct(payload) do
+  def call_model(%ModelInput{} = payload) do
     "http://risk-analysis.risk-analysis/service/v1/models/cashout"
     |> post(payload)
     |> handle_post()
   end
 
-  defp handle_post({:ok, %Tesla.Env{status: 200, body: ModelResponse}}),
-    do: {:ok, ModelResponse}
+  defp handle_post({:ok, %Tesla.Env{status: 200, body: body}}),
+    do: {:ok, body}
 
   defp handle_post({:ok, %Tesla.Env{status: 400}}), do: {:error, :bad_request}
   defp handle_post({:ok, %Tesla.Env{status: 500}}), do: {:error, :internal_server_error}
