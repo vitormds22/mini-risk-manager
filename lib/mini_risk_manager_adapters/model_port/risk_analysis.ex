@@ -8,11 +8,17 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   plug Tesla.Middleware.JSON
 
   alias MiniRiskManager.Ports.Types.ModelResponse
+  # alias MiniRiskManager.Ports.Types.ModelInput
 
   @behaviour MiniRiskManager.Ports.ModelPort
 
   @impl true
-  def call_model(payload) do
+
+  @spec call_model(struct()) ::
+          {:error, :bad_request | :internal_server_error}
+          | {:ok, ModelResponse.t()}
+
+  def call_model(payload) when is_struct(payload) do
     "http://risk-analysis.risk-analysis/service/v1/models/cashout"
     |> post(payload)
     |> handle_post()
