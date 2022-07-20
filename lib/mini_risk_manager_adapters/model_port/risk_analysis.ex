@@ -8,13 +8,13 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   plug Tesla.Middleware.JSON
 
   alias MiniRiskManager.Ports.Types.ModelResponse
-  # alias MiniRiskManager.Ports.Types.ModelInput
+  alias MiniRiskManager.Ports.Types.ModelInput
 
   @behaviour MiniRiskManager.Ports.ModelPort
 
   @impl true
 
-  @spec call_model(struct()) ::
+  @spec call_model(struct() | ModelInput.t()) ::
           {:error, :bad_request | :internal_server_error}
           | {:ok, ModelResponse.t()}
 
