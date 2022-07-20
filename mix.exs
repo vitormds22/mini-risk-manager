@@ -49,6 +49,7 @@ defmodule MiniRiskManager.MixProject do
       {:ex_machina, "~> 2.7.0", only: [:test, :dev], runtime: false},
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
+      {:mox, "~> 1.0", only: :test}
     ]
   end
 
