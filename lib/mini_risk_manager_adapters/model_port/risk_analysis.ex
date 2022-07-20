@@ -3,6 +3,7 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   Implements the behaviour of `MiniRiskManager.Ports.ModelPort` to the Risk Analysis.
   """
   use Tesla
+  require Logger
 
   plug Tesla.Middleware.BaseUrl, "http://risk-analysis.risk-analysis/service/v1/models/cashout"
   plug Tesla.Middleware.JSON
@@ -19,9 +20,20 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
     |> handle_post()
   end
 
-  defp handle_post({:ok, %Tesla.Env{status: 200, body: body}}),
-    do: {:ok, body}
+  defp handle_post({:ok, %Tesla.Env{status: 200, body: body}}) do
+    {:ok, %ModelResponse{
+      is_valid: Map.fetch!(body, "is_valid"),
+      metadata: Map.fetch!(body, "metadata")
+    }}
+  end
 
-  defp handle_post({:ok, %Tesla.Env{status: 400}}), do: {:error, :bad_request}
-  defp handle_post({:ok, %Tesla.Env{status: 500}}), do: {:error, :internal_server_error}
+  defp handle_post({:ok, %Tesla.Env{status: status, body: body}}) do
+    Logger.error("#{__MODULE__}.handle_post status=#{inspect(status)} body=#{inspect(body)}")
+    {:error, :request_failed}
+  end
+
+  defp handle_post({:error, reason}) do
+    Logger.error("#{__MODULE__}.handle_post error=#{inspect(reason)}")
+    {:error, :request_failed}
+  end
 end
