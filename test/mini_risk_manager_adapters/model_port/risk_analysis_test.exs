@@ -12,7 +12,7 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
   @valid_base_url "http://risk-analysis.risk-analysis/service/v1/models/cashout"
   @invalid_base_url "http://risk-analysis.risk-analysis/service/v1/models/cash"
 
-  def model_input_body() do
+  def model_input() do
     %ModelInput{
       operation_type: "inbound_pix_payment",
       amount: 50,
@@ -22,21 +22,26 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
     }
   end
 
+  def model_output_body() do
+    %{
+      "is_valid" => true,
+      "metadata" => %{"test" => "teste"}
+    }
+  end
+
   describe "call_model/1" do
     test "when post a valid payload to a valid url return success and attr is_valid true" do
-      payload = model_input_body()
+      payload = model_input()
+      body = model_output_body()
 
       expect(TeslaMock, :call, fn env, _ ->
         assert env.url == @valid_base_url
+        assert env.body == Jason.encode!(payload)
 
-        {:ok, %Tesla.Env{status: 200, body: payload}}
+        {:ok, %Tesla.Env{status: 200, body: body}}
       end)
 
-      response = RiskAnalysis.call_model(payload)
-
-      expected_response = {:ok, %ModelResponse{is_valid: true, metadata: %{test: "test"}}}
-
-      assert response = expected_response
+      assert RiskAnalysis.call_model(payload) == {:ok, %ModelResponse{is_valid: true, metadata: %{"test" => "teste"}}}
     end
   end
 end
