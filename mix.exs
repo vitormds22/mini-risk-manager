@@ -46,7 +46,9 @@ defmodule MiniRiskManager.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.1", only: [:dev, :test], runtime: false},
       {:sobelow, "~> 0.8", only: :dev},
-      {:ex_machina, "~> 2.7.0", only: [:test, :dev], runtime: false}
+      {:ex_machina, "~> 2.7.0", only: [:test, :dev], runtime: false},
+      {:tesla, "~> 1.4"},
+      {:hackney, "~> 1.17"},
     ]
   end
 
