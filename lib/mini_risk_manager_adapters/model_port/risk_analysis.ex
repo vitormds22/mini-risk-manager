@@ -4,6 +4,9 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   """
   use MiniRiskManagerAdapters.Tesla, "http://risk-analysis.risk-analysis"
 
+  alias MiniRiskManager.Ports.Types.ModelResponse
+  alias MiniRiskManager.Ports.Types.ModelInput
+
   @behaviour MiniRiskManager.Ports.ModelPort
 
   @impl true
