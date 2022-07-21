@@ -41,13 +41,6 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
 
   def invalid_model_output_body() do
     %{
-      "is_valid" => true,
-      "metadata" => %{"test" => "teste"}
-    }
-  end
-
-  def invalid_model_output_body() do
-    %{
       "is_valid" => false,
       "metadata" => %{"test" => "teste"}
     }
@@ -64,7 +57,10 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
   end
 
   describe "call_model/1" do
-    test "when post a valid payload to a valid url return success and attr is_valid true", %{payload: payload, body: body} do
+    test "when post a valid payload to a valid url return success and attr is_valid true", %{
+      payload: payload,
+      body: body
+    } do
       expect(TeslaMock, :call, fn env, _ ->
         assert env.url == @valid_base_url
         assert env.body == Jason.encode!(payload)
@@ -72,10 +68,14 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
         {:ok, %Tesla.Env{status: 200, body: body}}
       end)
 
-      assert RiskAnalysis.call_model(payload) == {:ok, %ModelResponse{is_valid: true, metadata: %{"test" => "teste"}}}
+      assert RiskAnalysis.call_model(payload) ==
+               {:ok, %ModelResponse{is_valid: true, metadata: %{"test" => "teste"}}}
     end
 
-    test "when post a invalid paylod to a valid url return a tuple error and request_failed", %{invalid_payload: invalid_payload, body: body} do
+    test "when post a invalid paylod to a valid url return a tuple error and request_failed", %{
+      invalid_payload: invalid_payload,
+      body: body
+    } do
       expect(TeslaMock, :call, fn env, _ ->
         assert env.url == @valid_base_url
         assert env.body == Jason.encode!(invalid_payload)
@@ -83,15 +83,17 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
         {:ok, %Tesla.Env{status: 400, body: body}}
       end)
 
-      assert RiskAnalysis.call_model(%ModelInput{}) == {:error, :request_failed}
+      assert RiskAnalysis.call_model(invalid_payload) == {:error, :request_failed}
     end
 
-    test "when post a invalid paylod to a valid url return a tuple error and reason", %{invalid_payload: invalid_payload} do
+    test "when post a invalid paylod to a valid url return a tuple error and reason", %{
+      invalid_payload: invalid_payload
+    } do
       expect(TeslaMock, :call, fn env, _ ->
         assert env.url != @invalid_base_url
         assert env.body == Jason.encode!(invalid_payload)
 
-        {:error, reason: :request_failed}
+        {:error, :timeout}
       end)
 
       assert RiskAnalysis.call_model(invalid_payload) == {:error, :request_failed}
