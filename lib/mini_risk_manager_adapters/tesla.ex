@@ -10,9 +10,6 @@ defmodule MiniRiskManagerAdapters.Tesla do
 
       plug Tesla.Middleware.BaseUrl, unquote(base_url)
       plug Tesla.Middleware.JSON
-
-      alias MiniRiskManager.Ports.Types.ModelResponse
-      alias MiniRiskManager.Ports.Types.ModelInput
     end
   end
 end
