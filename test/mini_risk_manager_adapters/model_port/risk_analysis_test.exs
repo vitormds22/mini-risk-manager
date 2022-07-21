@@ -40,8 +40,7 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
 
   def invalid_model_output_body() do
     %{
-      "is_valid" => false,
-      "metadata" => %{"test" => "teste"}
+      "reason" => "invalid_params"
     }
   end
 
