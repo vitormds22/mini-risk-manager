@@ -7,7 +7,7 @@ defmodule MiniRiskManager.Ports.ModelPort do
               {:ok, ModelResponse.t() | {:error, :request_failed}}
 
   @spec call_model(ModelInput.t()) ::
-              {:ok, ModelResponse.t() | {:error, :request_failed}}
+          {:ok, ModelResponse.t() | {:error, :request_failed}}
   def call_model(params) do
     adapter().call_model(params)
   end
