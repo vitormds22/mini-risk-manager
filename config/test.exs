@@ -13,8 +13,8 @@ config :mini_risk_manager, MiniRiskManager.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
-config :mini_risk_manager,
-  risk_analysis_impl: MiniRiskManager.Ports.ModelPortMock
+config :mini_risk_manager, MiniRiskManager.Ports.ModelPort,
+  adapter: MiniRiskManager.Ports.ModelPortMock
 
 config :tesla, adapter: TeslaMock
 
