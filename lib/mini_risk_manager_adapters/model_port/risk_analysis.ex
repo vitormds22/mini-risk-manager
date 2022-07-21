@@ -5,7 +5,7 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   use Tesla
   require Logger
 
-  plug Tesla.Middleware.BaseUrl, "http://risk-analysis.risk-analysis/service/v1/models/cashout"
+  plug Tesla.Middleware.BaseUrl, "http://risk-analysis.risk-analysis"
   plug Tesla.Middleware.JSON
 
   alias MiniRiskManager.Ports.Types.ModelResponse
@@ -15,16 +15,17 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
 
   @impl true
   def call_model(%ModelInput{} = payload) do
-    "http://risk-analysis.risk-analysis/service/v1/models/cashout"
+    "/service/v1/models/cashout"
     |> post(payload)
     |> handle_post()
   end
 
   defp handle_post({:ok, %Tesla.Env{status: 200, body: body}}) do
-    {:ok, %ModelResponse{
-      is_valid: Map.fetch!(body, "is_valid"),
-      metadata: Map.fetch!(body, "metadata")
-    }}
+    {:ok,
+     %ModelResponse{
+       is_valid: Map.fetch!(body, "is_valid"),
+       metadata: Map.fetch!(body, "metadata")
+     }}
   end
 
   defp handle_post({:ok, %Tesla.Env{status: status, body: body}}) do
