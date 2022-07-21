@@ -24,8 +24,8 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Configurar credo e dialyzer :heavy_check_mark:
   * Criar tabela audits :heavy_check_mark:
   * Criar model audit :heavy_check_mark:
-  * Criar port/adpter ModelPort :man_technologist:
-  * Criar port/adpter BalanceBlockerPort
+  * Criar port/adpter ModelPort :heavy_check_mark:
+  * Criar port/adpter BalanceBlockerPort:man_technologist:
   * Criar aggregator para audit
   * Criar repository para audit
   * Criar command para bloquear saldo
