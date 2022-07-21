@@ -1,5 +1,4 @@
 defmodule MiniRiskManager.Ports.Types.ModelResponse do
-
   @derive Jason.Encoder
 
   @type t() :: %__MODULE__{

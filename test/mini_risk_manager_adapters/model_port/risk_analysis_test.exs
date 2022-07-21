@@ -10,7 +10,6 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
   alias MiniRiskManager.Ports.Types.ModelInput
 
   @valid_base_url "http://risk-analysis.risk-analysis/service/v1/models/cashout"
-  @invalid_base_url "http://risk-analysis.risk-analysis/service/v1/models/cash"
 
   def model_input() do
     %ModelInput{
@@ -53,7 +52,7 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
     invalid_payload = invalid_model_input()
     invalid_body = invalid_model_output_body()
 
-    %{payload: payload, body: body, invalid_payload: invalid_payload}
+    %{payload: payload, body: body, invalid_payload: invalid_payload, invalid_body: invalid_body}
   end
 
   describe "call_model/1" do
@@ -74,13 +73,13 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
 
     test "when post a invalid paylod to a valid url return a tuple error and request_failed", %{
       invalid_payload: invalid_payload,
-      body: body
+      invalid_body: invalid_body
     } do
       expect(TeslaMock, :call, fn env, _ ->
         assert env.url == @valid_base_url
         assert env.body == Jason.encode!(invalid_payload)
 
-        {:ok, %Tesla.Env{status: 400, body: body}}
+        {:ok, %Tesla.Env{status: 400, body: invalid_body}}
       end)
 
       assert RiskAnalysis.call_model(invalid_payload) == {:error, :request_failed}
@@ -90,7 +89,7 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
       invalid_payload: invalid_payload
     } do
       expect(TeslaMock, :call, fn env, _ ->
-        assert env.url != @invalid_base_url
+        assert env.url == @valid_base_url
         assert env.body == Jason.encode!(invalid_payload)
 
         {:error, :timeout}
