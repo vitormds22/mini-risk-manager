@@ -25,6 +25,9 @@ config :logger, :console,
 config :mini_risk_manager, MiniRiskManager.Ports.ModelPort,
   adapter: MiniRiskManagerAdapters.ModelPort.RiskAnalysis
 
+config :mini_risk_manager, MiniRiskManager.Ports.BalanceBlokerPort,
+  adapter: MiniRiskManagerAdapters.BalanceBlokerPort.Transfers
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
