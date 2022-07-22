@@ -6,10 +6,11 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.Transfers do
   use MiniRiskManagerAdapters.Tesla, "http://transfers.transfers"
 
   @behaviour MiniRiskManager.Ports.BalanceBlokerPort
+  alias MiniRiskManager.Ports.Types.BalanceBlokerInput
 
   @impl true
-  def block_balance(payload, account_id) do
-    "/service/v1/accounts/#{account_id}/block_balance"
+  def block_balance(%BalanceBlokerInput{} = payload) do
+    "/service/v1/accounts/#{payload.account_id}/block_balance"
     |> post(payload)
     |> handle_post()
   end
