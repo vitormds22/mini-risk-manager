@@ -42,7 +42,7 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
         {:ok, %Tesla.Env{status: 204}}
       end)
 
-      assert Transfers.block_balance(payload, payload.account_id) == :ok
+      assert Transfers.block_balance(payload) == :ok
     end
 
     test "when post a invalid payload to a valid url return a tuple of error and request failed", %{
@@ -55,7 +55,7 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
         {:ok, %Tesla.Env{status: 400}}
       end)
 
-      assert Transfers.block_balance(invalid_payload, invalid_payload.account_id) ==
+      assert Transfers.block_balance(invalid_payload) ==
                {:error, :request_failed}
     end
 
@@ -71,7 +71,7 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
         {:error, :timeout}
       end)
 
-      assert Transfers.block_balance(invalid_payload, invalid_payload.account_id) ==
+      assert Transfers.block_balance(invalid_payload) ==
                {:error, :request_failed}
     end
   end
