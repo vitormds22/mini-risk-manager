@@ -16,6 +16,9 @@ config :mini_risk_manager, MiniRiskManager.Repo,
 config :mini_risk_manager, MiniRiskManager.Ports.ModelPort,
   adapter: MiniRiskManager.Ports.ModelPortMock
 
+config :mini_risk_manager, MiniRiskManager.Ports.BalanceBlokerPort,
+  adapter: MiniRiskManager.Ports.BalanceBlokerPortMock
+
 config :tesla, adapter: TeslaMock
 
 # We don't run a server during test. If one is required,
