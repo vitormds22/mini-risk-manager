@@ -1,4 +1,7 @@
 defmodule MiniRiskManager.Ports.Types.ModelInput do
+  @moduledoc """
+  Risk Analysis inputs
+  """
   @derive Jason.Encoder
 
   @type t() :: %__MODULE__{

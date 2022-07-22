@@ -5,13 +5,13 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
 
   setup :verify_on_exit!
 
-  alias MiniRiskManagerAdapters.ModelPort.RiskAnalysis
-  alias MiniRiskManager.Ports.Types.ModelResponse
   alias MiniRiskManager.Ports.Types.ModelInput
+  alias MiniRiskManager.Ports.Types.ModelResponse
+  alias MiniRiskManagerAdapters.ModelPort.RiskAnalysis
 
   @valid_base_url "http://risk-analysis.risk-analysis/service/v1/models/cashout"
 
-  def model_input() do
+  def model_input do
     %ModelInput{
       operation_type: "inbound_pix_payment",
       amount: 50,
@@ -21,7 +21,7 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
     }
   end
 
-  def invalid_model_input() do
+  def invalid_model_input do
     %ModelInput{
       operation_type: nil,
       amount: nil,
@@ -31,14 +31,14 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysisTest do
     }
   end
 
-  def model_output_body() do
+  def model_output_body do
     %{
       "is_valid" => true,
       "metadata" => %{"test" => "teste"}
     }
   end
 
-  def invalid_model_output_body() do
+  def invalid_model_output_body do
     %{
       "reason" => "invalid_params"
     }

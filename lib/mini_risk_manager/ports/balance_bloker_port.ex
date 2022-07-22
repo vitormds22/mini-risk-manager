@@ -14,7 +14,7 @@ defmodule MiniRiskManager.Ports.BalanceBlokerPort do
     adapter().block_balance(block_balance_input, account_id)
   end
 
-  defp adapter() do
+  defp adapter do
     :mini_risk_manager
     |> Application.fetch_env!(__MODULE__)
     |> Keyword.fetch!(:adapter)

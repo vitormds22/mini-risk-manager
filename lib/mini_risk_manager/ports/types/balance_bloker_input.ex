@@ -1,4 +1,7 @@
 defmodule MiniRiskManager.Ports.Types.BalanceBlokerInput do
+  @moduledoc """
+  Balance bloker inputs
+  """
   @derive Jason.Encoder
 
   @type t() :: %__MODULE__{

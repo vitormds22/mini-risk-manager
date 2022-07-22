@@ -5,10 +5,10 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
 
   setup :verify_on_exit!
 
-  alias MiniRiskManagerAdapters.BalanceBlokerPort.Transfers
   alias MiniRiskManager.Ports.Types.BalanceBlokerInput
+  alias MiniRiskManagerAdapters.BalanceBlokerPort.Transfers
 
-  def balance_bloker_input() do
+  def balance_bloker_input do
     %BalanceBlokerInput{
       operation_id: Ecto.UUID.generate(),
       operation_type: :inbound_pix_payment,
@@ -17,7 +17,7 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
     }
   end
 
-  def invalid_balance_bloker_input() do
+  def invalid_balance_bloker_input do
     %BalanceBlokerInput{
       operation_id: nil,
       operation_type: nil,

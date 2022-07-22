@@ -1,4 +1,7 @@
 defmodule MiniRiskManager.Ports.Types.RequestInputParams do
+  @moduledoc """
+  Request input params of `MiniRiskManager`
+  """
   @derive Jason.Encoder
 
   @type t() :: %__MODULE__{

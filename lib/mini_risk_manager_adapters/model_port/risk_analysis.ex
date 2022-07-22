@@ -4,10 +4,10 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   """
   use MiniRiskManagerAdapters.Tesla, "http://risk-analysis.risk-analysis"
 
-  alias MiniRiskManager.Ports.Types.ModelResponse
-  alias MiniRiskManager.Ports.Types.ModelInput
-
   @behaviour MiniRiskManager.Ports.ModelPort
+
+  alias MiniRiskManager.Ports.Types.ModelInput
+  alias MiniRiskManager.Ports.Types.ModelResponse
 
   @impl true
   def call_model(%ModelInput{} = payload) do
