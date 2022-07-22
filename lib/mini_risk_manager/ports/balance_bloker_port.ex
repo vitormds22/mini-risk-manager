@@ -6,12 +6,12 @@ defmodule MiniRiskManager.Ports.BalanceBlokerPort do
 
   @type block_balance_response() :: {:ok, :status} | {:error, :request_failed}
 
-  @callback block_balance(BalanceBlokerInput.t(), Ecto.UUID.t()) ::
+  @callback block_balance(BalanceBlokerInput.t()) ::
               block_balance_response()
 
-  @spec block_balance(BalanceBlokerInput.t(), Ecto.UUID.t()) :: block_balance_response()
-  def block_balance(block_balance_input, account_id) do
-    adapter().block_balance(block_balance_input, account_id)
+  @spec block_balance(BalanceBlokerInput.t()) :: block_balance_response()
+  def block_balance(block_balance_input) do
+    adapter().block_balance(block_balance_input)
   end
 
   defp adapter do
