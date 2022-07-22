@@ -4,7 +4,7 @@ defmodule MiniRiskManager.Ports.BalanceBlokerPort do
   """
   alias MiniRiskManager.Ports.Types.BalanceBlokerInput
 
-  @type block_balance_response() :: {:ok, :status} | {:error, :request_failed}
+  @type block_balance_response() :: :ok | {:error, :request_failed}
 
   @callback block_balance(BalanceBlokerInput.t()) ::
               block_balance_response()
