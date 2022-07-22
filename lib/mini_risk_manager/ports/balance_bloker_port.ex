@@ -2,12 +2,15 @@ defmodule MiniRiskManager.Ports.BalanceBlokerPort do
   @moduledoc """
   Behaviour/Port for block any malicious transfer
   """
-  @callback call_transfers(any()) :: any()
+  alias MiniRiskManager.Ports.Types.BlockBalanceInput
 
-  @spec call_transfers(any()) :: any()
+  @type block_balance_response() :: {:ok, :status} | {:error, :request_failed}
 
-  def call_transfers(model_response) do
-    adapter().call_transfers(model_response)
+  @callback block_balance(BlockBalanceInput.t()) :: block_balance_response()
+
+  @spec block_balance(BlockBalanceInput.t()) :: block_balance_response()
+  def block_balance(block_balance_input) do
+    adapter().block_balance(block_balance_input)
   end
 
   defp adapter() do
