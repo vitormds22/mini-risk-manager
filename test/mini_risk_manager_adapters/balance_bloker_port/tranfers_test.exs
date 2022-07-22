@@ -36,33 +36,43 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
   describe "block_balance/1" do
     test "when post a valid payload to a valid url return a tuple of success", %{payload: payload} do
       expect(TeslaMock, :call, fn env, _ ->
-        assert env.url == "http://transfers.transfers/service/v1/accounts/#{payload.account_id}/block_balance"
+        assert env.url ==
+                 "http://transfers.transfers/service/v1/accounts/#{payload.account_id}/block_balance"
 
         {:ok, %Tesla.Env{status: 204}}
       end)
 
-      assert Transfers.block_balance(payload) == {:ok, :status}
+      assert Transfers.block_balance(payload, payload.account_id) == :ok
     end
 
-    test "when post a invalid payload to a valid url return a tuple of error and request failed", %{invalid_payload: invalid_payload} do
+    test "when post a invalid payload to a valid url return a tuple of error and request failed", %{
+      invalid_payload: invalid_payload
+    } do
       expect(TeslaMock, :call, fn env, _ ->
-        assert env.url == "http://transfers.transfers/service/v1/accounts/#{invalid_payload.account_id}/block_balance"
+        assert env.url ==
+                 "http://transfers.transfers/service/v1/accounts/#{invalid_payload.account_id}/block_balance"
 
         {:ok, %Tesla.Env{status: 400}}
       end)
 
-      assert Transfers.block_balance(invalid_payload) == {:error, :request_failed}
+      assert Transfers.block_balance(invalid_payload, invalid_payload.account_id) ==
+               {:error, :request_failed}
     end
 
-    test "when post a invalid payload to a valid url return a tuple of error and reason", %{invalid_payload: invalid_payload} do
+    test "when post a invalid payload to a valid url return a tuple of error and reason", %{
+      invalid_payload: invalid_payload
+    } do
       expect(TeslaMock, :call, fn env, _ ->
-        assert env.url == "http://transfers.transfers/service/v1/accounts/#{invalid_payload.account_id}/block_balance"
+        assert env.url ==
+                 "http://transfers.transfers/service/v1/accounts/#{invalid_payload.account_id}/block_balance"
+
         assert env.body == Jason.encode!(invalid_payload)
 
         {:error, :timeout}
       end)
 
-      assert Transfers.block_balance(invalid_payload) == {:error, :request_failed}
+      assert Transfers.block_balance(invalid_payload, invalid_payload.account_id) ==
+               {:error, :request_failed}
     end
   end
 end
