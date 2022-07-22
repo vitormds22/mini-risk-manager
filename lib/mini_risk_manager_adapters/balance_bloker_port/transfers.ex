@@ -10,7 +10,8 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.Transfers do
 
   @impl true
   def block_balance(%BalanceBlokerInput{} = payload) do
-    "/service/v1/accounts/#{payload.account_id}/block_balance"
+    account_id = Map.take(payload, [:account_id])
+    "/service/v1/accounts/#{account_id[:account_id]}/block_balance"
     |> post(payload)
     |> handle_post()
   end
