@@ -8,6 +8,8 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
   alias MiniRiskManager.Ports.Types.BalanceBlokerInput
   alias MiniRiskManagerAdapters.BalanceBlokerPort.Transfers
 
+  @invalid_url "http://transfers.transfers/service/v1/accounts/:account_id/block_balance"
+
   def balance_bloker_input do
     %BalanceBlokerInput{
       operation_id: Ecto.UUID.generate(),
@@ -21,8 +23,7 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
     %BalanceBlokerInput{
       operation_id: nil,
       operation_type: nil,
-      amount: nil,
-      account_id: nil
+      amount: nil
     }
   end
 
@@ -39,6 +40,8 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
         assert env.url ==
                  "http://transfers.transfers/service/v1/accounts/#{payload.account_id}/block_balance"
 
+        assert env.body == Jason.encode!(Map.take(payload, [:operation_id, :operation_type, :amount, :internal_reason]))
+
         {:ok, %Tesla.Env{status: 204}}
       end)
 
@@ -49,8 +52,8 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
       invalid_payload: invalid_payload
     } do
       expect(TeslaMock, :call, fn env, _ ->
-        assert env.url ==
-                 "http://transfers.transfers/service/v1/accounts/#{invalid_payload.account_id}/block_balance"
+        assert env.url == @invalid_url
+
 
         {:ok, %Tesla.Env{status: 400}}
       end)
@@ -63,10 +66,9 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
       invalid_payload: invalid_payload
     } do
       expect(TeslaMock, :call, fn env, _ ->
-        assert env.url ==
-                 "http://transfers.transfers/service/v1/accounts/#{invalid_payload.account_id}/block_balance"
+        assert env.url == @invalid_url
 
-        assert env.body == Jason.encode!(invalid_payload)
+        assert env.body == Jason.encode!((Map.take(invalid_payload, [:operation_id, :operation_type, :amount, :internal_reason])))
 
         {:error, :timeout}
       end)
