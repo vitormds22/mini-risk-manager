@@ -11,18 +11,18 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
         %Audit{
           id: Ecto.UUID.generate(),
           input_params: %{
-            operation_id: Ecto.UUID.generate,
+            operation_id: Ecto.UUID.generate(),
             operation_type: :inbound_pix_payment,
             amount: 20,
-            account: {[
-              id: Ecto.UUID.generate,
+            account: %{
+              id: Ecto.UUID.generate(),
               balance: 20
-            ]},
-            target: {[
+            },
+            target: %{
               document: "Teste Factory",
               account_code: "XPTO-0",
               account_type: :CC
-            ]}
+            }
           },
           model_input: %{
             operation_type: :inbound_pix_payment,
