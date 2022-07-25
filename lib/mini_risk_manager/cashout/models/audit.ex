@@ -6,9 +6,11 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias MiniRiskManager.Cashout.Models.Audit.InputParams
+
   @type t() :: %__MODULE__{
           id: Ecto.UUID.t(),
-          input_params: map(),
+          input_params: InputParams.t(),
           model_input: map(),
           model_response: map(),
           is_valid: String.t(),
@@ -19,12 +21,12 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
   @required_keys ~w(input_params model_input model_response is_valid)a
 
   schema "audits" do
-    field :input_params, :map
     field :operation_id, :string
     field :operation_type, :string
     field :model_input, :map
     field :model_response, :map
     field :is_valid, :boolean
+    embeds_one(:input_params, InputParams)
 
     timestamps(updated_at: false)
   end
@@ -41,7 +43,14 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
     |> IO.inspect(label: "UNIQUE PARAMS")
   end
 
-  defp put_operation(x) do
-    IO.inspect(x, label: "PUT PARAMS")
+  defp put_operation(changeset) do
+    IO.inspect(changeset, label: "PUT PARAMS")
+    case get_field(changeset, :input_params) do
+      nil -> changeset
+      %{operation_type: operation_type, operation_id: operation_id} ->
+        changeset
+        |> force_change(:operation_type, operation_type)
+        |> force_change(:operation_id, operation_id)
+    end
   end
 end
