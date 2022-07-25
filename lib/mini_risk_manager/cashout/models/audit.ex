@@ -20,6 +20,8 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
 
   schema "audits" do
     field :input_params, :map
+    field :operation_id, :string
+    field :operation_type, :string
     field :model_input, :map
     field :model_response, :map
     field :is_valid, :boolean
@@ -31,6 +33,15 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
   def create_changeset(attrs) do
     %__MODULE__{}
     |> cast(attrs, @required_keys)
+    |> IO.inspect(label: "CAST PARAMS")
     |> validate_required(@required_keys)
+    |> IO.inspect(label: "VALIDATE PARAMS")
+    |> put_operation()
+    |> unique_constraint([:operation_id, :operation_type])
+    |> IO.inspect(label: "UNIQUE PARAMS")
+  end
+
+  defp put_operation(x) do
+    IO.inspect(x, label: "PUT PARAMS")
   end
 end
