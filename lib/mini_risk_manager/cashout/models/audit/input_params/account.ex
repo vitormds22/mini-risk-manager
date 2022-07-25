@@ -12,4 +12,10 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Account do
     field(:id, Ecto.UUID)
     field(:balance, :integer)
   end
+
+  def create_changeset(audit \\ %__MODULE__{}, attrs) do
+    audit
+    |> cast(attrs, [:id, :balance])
+    |> validate_required([:id, :balance])
+  end
 end

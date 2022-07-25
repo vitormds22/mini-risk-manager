@@ -17,4 +17,12 @@ defmodule MiniRiskManager.Cashout.Models.InputParams do
     embeds_one(:account, Account)
     embeds_one(:target, Target)
   end
+
+  def create_changeset(audit \\ %__MODULE__{}, attrs) do
+    audit
+    |> cast(attrs, [:operation_type, :operation_id, :amount])
+    |> cast_embed(:account, with: &Account.create_changeset/2)
+    |> cast_embed(:target, with: &Target.create_changeset/2)
+    |> validate_required([:operation_type, :operation_id, :amount, :account, :target])
+  end
 end

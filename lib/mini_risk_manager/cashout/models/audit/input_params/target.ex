@@ -13,4 +13,9 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Target do
     field(:account_code, :string)
     field(:account_type, Ecto.Enum, values: [:CC, :PP, :PG])
   end
+
+  def create_changeset(audit \\ %__MODULE__{}, attrs) do
+    audit
+    |> cast(attrs, [:document, :account_code, :account_type])
+  end
 end
