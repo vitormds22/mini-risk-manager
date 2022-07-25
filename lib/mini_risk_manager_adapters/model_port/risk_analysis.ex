@@ -2,16 +2,12 @@ defmodule MiniRiskManagerAdapters.ModelPort.RiskAnalysis do
   @moduledoc """
   Implements the behaviour of `MiniRiskManager.Ports.ModelPort` to the Risk Analysis.
   """
-  use Tesla
-  require Logger
-
-  plug Tesla.Middleware.BaseUrl, "http://risk-analysis.risk-analysis"
-  plug Tesla.Middleware.JSON
-
-  alias MiniRiskManager.Ports.Types.ModelResponse
-  alias MiniRiskManager.Ports.Types.ModelInput
+  use MiniRiskManagerAdapters.Tesla, "http://risk-analysis.risk-analysis"
 
   @behaviour MiniRiskManager.Ports.ModelPort
+
+  alias MiniRiskManager.Ports.Types.ModelInput
+  alias MiniRiskManager.Ports.Types.ModelResponse
 
   @impl true
   def call_model(%ModelInput{} = payload) do

@@ -1,4 +1,7 @@
 defmodule MiniRiskManager.Ports.Types.ModelResponse do
+  @moduledoc """
+  Risk Analysis response
+  """
   @derive Jason.Encoder
 
   @type t() :: %__MODULE__{

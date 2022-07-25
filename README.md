@@ -20,15 +20,15 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## To do list
 
-  * Criar projeto com mix phx.new :heavy_check_mark:
   * Configurar credo e dialyzer :heavy_check_mark:
-  * Criar tabela audits :heavy_check_mark:
-  * Criar model audit :heavy_check_mark:
-  * Criar port/adpter ModelPort :heavy_check_mark:
-  * Criar port/adpter BalanceBlockerPort:man_technologist:
-  * Criar aggregator para audit
-  * Criar repository para audit
-  * Criar command para bloquear saldo
-  * Criar job para bloquear saldo
-  * Criar command para validar o risco
-  * Criar rota de serviço
+  * Projeto com mix phx.new :heavy_check_mark:
+  * Tabela audits :heavy_check_mark:
+  * Model audit :heavy_check_mark:
+  * Port/adpter ModelPort :heavy_check_mark:
+  * Port/adpter BalanceBlockerPort :heavy_check_mark:
+  * Aggregator para audit :man_technologist:
+  * Repository para audit
+  * Command para bloquear saldo
+  * Job para bloquear saldo
+  * Command para validar o risco
+  * Rota de serviço

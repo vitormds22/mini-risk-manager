@@ -3,16 +3,19 @@ defmodule MiniRiskManager.Ports.ModelPort do
   Port for call fraud model
   """
 
-  @callback call_model(ModelInput.t()) ::
-              {:ok, ModelResponse.t() | {:error, :request_failed}}
+  alias MiniRiskManager.Ports.Types.ModelInput
+  alias MiniRiskManager.Ports.Types.ModelResponse
 
-  @spec call_model(ModelInput.t()) ::
-          {:ok, ModelResponse.t() | {:error, :request_failed}}
-  def call_model(params) do
-    adapter().call_model(params)
+  @type call_model_response() :: {:ok, ModelResponse.t()} | {:error, :request_failed}
+
+  @callback call_model(ModelInput.t()) :: call_model_response()
+
+  @spec call_model(ModelInput.t()) :: call_model_response()
+  def call_model(model_input) do
+    adapter().call_model(model_input)
   end
 
-  defp adapter() do
+  defp adapter do
     :mini_risk_manager
     |> Application.fetch_env!(__MODULE__)
     |> Keyword.fetch!(:adapter)
