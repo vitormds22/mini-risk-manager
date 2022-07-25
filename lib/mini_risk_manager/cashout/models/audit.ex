@@ -6,7 +6,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias MiniRiskManager.Cashout.Models.Audit.InputParams
+  alias MiniRiskManager.Cashout.Models.InputParams
 
   @type t() :: %__MODULE__{
           id: Ecto.UUID.t(),
@@ -18,7 +18,6 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
         }
 
   @primary_key {:id, Ecto.UUID, autogenerate: true}
-  @required_keys ~w(input_params model_input model_response is_valid)a
 
   schema "audits" do
     field :operation_id, :string
@@ -34,19 +33,19 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
   @spec create_changeset(map()) :: Ecto.Changeset.t()
   def create_changeset(attrs) do
     %__MODULE__{}
-    |> cast(attrs, @required_keys)
-    |> IO.inspect(label: "CAST PARAMS")
-    |> validate_required(@required_keys)
-    |> IO.inspect(label: "VALIDATE PARAMS")
+    |> cast(attrs, [:model_input, :model_response, :is_valid])
+    |> cast_embed(:input_params, with: &InputParams.create_changeset/2)
+    |> validate_required([:input_params, :model_input, :model_response, :is_valid])
     |> put_operation()
+    |> validate_required([:operation_id, :operation_type])
     |> unique_constraint([:operation_id, :operation_type])
-    |> IO.inspect(label: "UNIQUE PARAMS")
   end
 
   defp put_operation(changeset) do
-    IO.inspect(changeset, label: "PUT PARAMS")
     case get_field(changeset, :input_params) do
-      nil -> changeset
+      nil ->
+        changeset
+
       %{operation_type: operation_type, operation_id: operation_id} ->
         changeset
         |> force_change(:operation_type, operation_type)
