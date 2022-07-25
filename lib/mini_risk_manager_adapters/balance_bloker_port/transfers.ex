@@ -4,15 +4,22 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.Transfers do
   """
 
   use MiniRiskManagerAdapters.Tesla, "http://transfers.transfers"
+  plug Tesla.Middleware.PathParams
 
   @behaviour MiniRiskManager.Ports.BalanceBlokerPort
   alias MiniRiskManager.Ports.Types.BalanceBlokerInput
 
   @impl true
-  def block_balance(%BalanceBlokerInput{} = payload) do
-    account_id = Map.take(payload, [:account_id])
-    "/service/v1/accounts/#{account_id[:account_id]}/block_balance"
-    |> post(payload)
+  def block_balance(%BalanceBlokerInput{account_id: account_id} = payload) do
+    body = Map.take(payload, [:operation_id, :operation_type, :amount, :internal_reason])
+
+    "/service/v1/accounts/:account_id/block_balance"
+    |> post(body,
+      opts: [
+        path_params: [
+          account_id: account_id
+        ]
+    ])
     |> handle_post()
   end
 
