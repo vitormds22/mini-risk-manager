@@ -10,5 +10,8 @@ defmodule MiniRiskManager.Cashout.Aggregates.AuditAggregate do
 
   # @spec create_audit(audit_params) ::
   def create_audit(audit_params) do
+    audit_params
+    |> Audit.create_changeset()
+    |> Repo.insert()
   end
 end
