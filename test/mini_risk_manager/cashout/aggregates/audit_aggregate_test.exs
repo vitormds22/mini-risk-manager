@@ -10,5 +10,19 @@ defmodule MiniRiskManager.Cashout.Aggregates.AuditAggregateTest do
 
       assert {:ok, %Audit{}} = AuditAggregate.create_audit(params)
     end
+
+    test "when pass a invalid map returns a tuple of error and invalid changeset" do
+      params =
+        params_for(
+          :mini_risk_manager_audit,
+          input_params: nil,
+          model_input: nil,
+          model_response: nil,
+          operation_type: nil,
+          operation_id: nil
+        )
+
+        assert {:error, %Ecto.Changeset{valid?: false}} = AuditAggregate.create_audit(params)
+    end
   end
 end
