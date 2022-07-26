@@ -22,7 +22,7 @@ defmodule MiniRiskManager.Cashout.Aggregates.AuditAggregateTest do
           operation_id: nil
         )
 
-        assert {:error, %Ecto.Changeset{valid?: false}} = AuditAggregate.create_audit(params)
+      assert {:error, %Ecto.Changeset{valid?: false}} = AuditAggregate.create_audit(params)
     end
   end
 end

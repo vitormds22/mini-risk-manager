@@ -8,7 +8,7 @@ defmodule MiniRiskManager.Cashout.Aggregates.AuditAggregate do
 
   require Logger
 
-  # @spec create_audit(audit_params) ::
+  @spec create_audit(map()) :: Audit.t()
   def create_audit(audit_params) do
     audit_params
     |> Audit.create_changeset()

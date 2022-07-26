@@ -13,6 +13,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Account do
     field(:balance, :integer)
   end
 
+  @spec create_changeset(struct(), map()) :: Ecto.Changeset.t()
   def create_changeset(audit \\ %__MODULE__{}, attrs) do
     audit
     |> cast(attrs, [:id, :balance])
