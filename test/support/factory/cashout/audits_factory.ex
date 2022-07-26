@@ -2,7 +2,6 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
   @moduledoc false
 
   # credo:disable-for-this-file Credo.Check.Refactor.LongQuoteBlocks
-
   defmacro __using__(_opts) do
     quote location: :keep do
       alias MiniRiskManager.Cashout.Models.Audit
