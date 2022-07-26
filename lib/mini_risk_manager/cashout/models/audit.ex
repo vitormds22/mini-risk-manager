@@ -6,7 +6,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias MiniRiskManager.Cashout.Models.InputParams
+  alias MiniRiskManager.Cashout.Models.Audit.InputParams
 
   @type t() :: %__MODULE__{
           id: Ecto.UUID.t(),
@@ -21,7 +21,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
 
   schema "audits" do
     field :operation_id, :string
-    field :operation_type, :string
+    field :operation_type, Ecto.Enum, values: [:inbound_pix_payment, :inbound_external_transfer]
     field :model_input, :map
     field :model_response, :map
     field :is_valid, :boolean
