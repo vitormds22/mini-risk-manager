@@ -1,4 +1,4 @@
-defmodule MiniRiskManager.Cashout.Models.InputParams do
+defmodule MiniRiskManager.Cashout.Models.Audit.InputParams do
   @moduledoc """
   Defines the desired structure and validations
   for input params for audit validation
