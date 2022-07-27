@@ -6,32 +6,41 @@ defmodule MiniRiskManager.Cashout.Models.Audit.TargetTest do
 
   @err_cant_be_blank "can't be blank"
   setup do
-    params = string_params_for(:mini_risk_manager_audit)
-
-    invalid_params =
-      string_params_for(
-        :mini_risk_manager_audit_target_params,
-        document: nil,
-        account_code: nil,
-        account_type: nil
-      )
-
-    %{invalid_params: invalid_params, params: params}
+    params = params_for(:mini_risk_manager_audit_target_params)
+    %{params: params}
   end
 
   describe "create_changeset/2" do
-    test "When passed all required attrs return a valid changeset", %{params: params} do
-      assert %Ecto.Changeset{valid?: true} =
-               Target.create_changeset(params["input_params"]["target"])
+    test "when missing required attrs return a invalid changeset" do
+      changeset = Target.create_changeset(%{})
+      assert errors_on(changeset) == %{
+        document: [@err_cant_be_blank],
+      }
     end
 
-    test "When missing required attrs return a invalid changeset", %{invalid_params: invalid_params} do
-      assert %Ecto.Changeset{
-               valid?: false,
-               errors: [
-                 document: {@err_cant_be_blank, [validation: :required]}
-               ]
-             } = Target.create_changeset(invalid_params)
+    test "when passed all required attrs return a valid changeset", %{params: params} do
+      assert %Ecto.Changeset{changes: changes, valid?: true} =
+               Target.create_changeset(params)
+
+      assert changes.account_code == params.account_code
+      assert changes.account_type == params.account_type
+      assert changes.document == params.document
+    end
+
+    test "with invalid types" do
+      params = %{
+        document: 111,
+        account_code: 111,
+        account_type: "string",
+      }
+
+      changeset = Target.create_changeset(params)
+
+      assert errors_on(changeset) == %{
+        document: ["is invalid"],
+        account_code: ["is invalid"],
+        account_type: ["is invalid"],
+      }
     end
   end
 end
