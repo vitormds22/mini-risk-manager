@@ -19,7 +19,8 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.Transfers do
         path_params: [
           account_id: account_id
         ]
-    ])
+      ]
+    )
     |> handle_post()
   end
 

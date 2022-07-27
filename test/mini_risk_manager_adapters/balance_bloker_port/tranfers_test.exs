@@ -40,7 +40,10 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
         assert env.url ==
                  "http://transfers.transfers/service/v1/accounts/#{payload.account_id}/block_balance"
 
-        assert env.body == Jason.encode!(Map.take(payload, [:operation_id, :operation_type, :amount, :internal_reason]))
+        assert env.body ==
+                 Jason.encode!(
+                   Map.take(payload, [:operation_id, :operation_type, :amount, :internal_reason])
+                 )
 
         {:ok, %Tesla.Env{status: 204}}
       end)
@@ -53,7 +56,6 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
     } do
       expect(TeslaMock, :call, fn env, _ ->
         assert env.url == @invalid_url
-
 
         {:ok, %Tesla.Env{status: 400}}
       end)
@@ -68,7 +70,15 @@ defmodule MiniRiskManagerAdapters.BalanceBlokerPort.TransfersTest do
       expect(TeslaMock, :call, fn env, _ ->
         assert env.url == @invalid_url
 
-        assert env.body == Jason.encode!((Map.take(invalid_payload, [:operation_id, :operation_type, :amount, :internal_reason])))
+        assert env.body ==
+                 Jason.encode!(
+                   Map.take(invalid_payload, [
+                     :operation_id,
+                     :operation_type,
+                     :amount,
+                     :internal_reason
+                   ])
+                 )
 
         {:error, :timeout}
       end)
