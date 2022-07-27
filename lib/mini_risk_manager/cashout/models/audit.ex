@@ -34,7 +34,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
   def create_changeset(attrs) do
     %__MODULE__{}
     |> cast(attrs, [:model_input, :model_response, :is_valid])
-    |> cast_embed(:input_params, with: &InputParams.create_changeset/2)
+    |> cast_embed(:input_params, with: &InputParams.create_changeset/1)
     |> put_operation()
     |> validate_required([:input_params, :model_input, :model_response, :is_valid])
     |> unique_constraint([:operation_id, :operation_type])
