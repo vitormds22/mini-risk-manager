@@ -27,7 +27,11 @@ defmodule MiniRiskManager.Cashout.Models.AuditTest do
         operation_id: nil
       )
 
-    %{invalid_params_operation: invalid_params_operation, invalid_params: invalid_params, params: params}
+    %{
+      invalid_params_operation: invalid_params_operation,
+      invalid_params: invalid_params,
+      params: params
+    }
   end
 
   describe "create_changeset/1" do
@@ -48,15 +52,16 @@ defmodule MiniRiskManager.Cashout.Models.AuditTest do
       assert %Ecto.Changeset{valid?: true} = Audit.create_changeset(params)
     end
 
-    test "When pass a changeset without input params and operations data return a invalid changeset", %{invalid_params_operation: invalid_params_operation} do
+    test "When pass a changeset without input params and operations data return a invalid changeset",
+         %{invalid_params_operation: invalid_params_operation} do
       assert %Ecto.Changeset{
-        valid?: false,
-        errors: [
-          operation_id: {@err_cant_be_blank, [validation: :required]},
-          operation_type: {@err_cant_be_blank, [validation: :required]},
-          input_params: {@err_cant_be_blank, [validation: :required]}
-        ]
-      } = Audit.create_changeset(invalid_params_operation)
+               valid?: false,
+               errors: [
+                 operation_id: {@err_cant_be_blank, [validation: :required]},
+                 operation_type: {@err_cant_be_blank, [validation: :required]},
+                 input_params: {@err_cant_be_blank, [validation: :required]}
+               ]
+             } = Audit.create_changeset(invalid_params_operation)
     end
   end
 end

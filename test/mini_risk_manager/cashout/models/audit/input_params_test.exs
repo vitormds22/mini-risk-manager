@@ -15,7 +15,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
         operation_type: nil,
         amount: nil,
         account: nil,
-        target: nil,
+        target: nil
       )
 
     %{invalid_params: invalid_params, params: params}
@@ -28,15 +28,15 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
 
     test "When missing required attrs return a invalid changeset", %{invalid_params: invalid_params} do
       assert %Ecto.Changeset{
-        valid?: false,
-        errors: [
-          operation_type: {@err_cant_be_blank, [validation: :required]},
-          operation_id: {@err_cant_be_blank, [validation: :required]},
-          amount: {@err_cant_be_blank, [validation: :required]},
-          account: {@err_cant_be_blank, [validation: :required]},
-          target: {@err_cant_be_blank, [validation: :required]}
-        ]
-      } = InputParams.create_changeset(invalid_params)
+               valid?: false,
+               errors: [
+                 operation_type: {@err_cant_be_blank, [validation: :required]},
+                 operation_id: {@err_cant_be_blank, [validation: :required]},
+                 amount: {@err_cant_be_blank, [validation: :required]},
+                 account: {@err_cant_be_blank, [validation: :required]},
+                 target: {@err_cant_be_blank, [validation: :required]}
+               ]
+             } = InputParams.create_changeset(invalid_params)
     end
   end
 end

@@ -21,16 +21,17 @@ defmodule MiniRiskManager.Cashout.Models.Audit.TargetTest do
 
   describe "create_changeset/2" do
     test "When passed all required attrs return a valid changeset", %{params: params} do
-      assert %Ecto.Changeset{valid?: true} = Target.create_changeset(params["input_params"]["target"])
+      assert %Ecto.Changeset{valid?: true} =
+               Target.create_changeset(params["input_params"]["target"])
     end
 
     test "When missing required attrs return a invalid changeset", %{invalid_params: invalid_params} do
       assert %Ecto.Changeset{
-        valid?: false,
-        errors: [
-          document: {@err_cant_be_blank, [validation: :required]},
-        ]
-      } = Target.create_changeset(invalid_params)
+               valid?: false,
+               errors: [
+                 document: {@err_cant_be_blank, [validation: :required]}
+               ]
+             } = Target.create_changeset(invalid_params)
     end
   end
 end

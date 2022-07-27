@@ -19,17 +19,18 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.AccountTest do
 
   describe "create_changeset/2" do
     test "When passed all required attrs return a valid changeset", %{params: params} do
-      assert %Ecto.Changeset{valid?: true} = Account.create_changeset(params["input_params"]["account"])
+      assert %Ecto.Changeset{valid?: true} =
+               Account.create_changeset(params["input_params"]["account"])
     end
 
     test "When missing required attrs return a invalid changeset", %{invalid_params: invalid_params} do
       assert %Ecto.Changeset{
-        valid?: false,
-        errors: [
-          id: {@err_cant_be_blank, [validation: :required]},
-          balance: {@err_cant_be_blank, [validation: :required]}
-        ]
-      } = Account.create_changeset(invalid_params)
+               valid?: false,
+               errors: [
+                 id: {@err_cant_be_blank, [validation: :required]},
+                 balance: {@err_cant_be_blank, [validation: :required]}
+               ]
+             } = Account.create_changeset(invalid_params)
     end
   end
 end
