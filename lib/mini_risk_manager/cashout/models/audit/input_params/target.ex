@@ -1,7 +1,7 @@
 defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Target do
   @moduledoc """
   Defines the desired structure and validations
-  for input params for audit validation
+  for target params for input params validation
   """
   use Ecto.Schema
 
@@ -15,7 +15,9 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Target do
   end
 
   @spec create_changeset(struct(), map()) :: Ecto.Changeset.t()
-  def create_changeset(audit \\ %__MODULE__{}, attrs) do
-    cast(audit, attrs, [:document, :account_code, :account_type])
+  def create_changeset(module \\ %__MODULE__{}, attrs) do
+    module
+    |> cast(attrs, [:document, :account_code, :account_type])
+    |> validate_required(:document)
   end
 end

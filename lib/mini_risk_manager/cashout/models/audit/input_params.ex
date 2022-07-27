@@ -19,8 +19,8 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams do
   end
 
   @spec create_changeset(struct(), map()) :: Ecto.Changeset.t()
-  def create_changeset(audit \\ %__MODULE__{}, attrs) do
-    audit
+  def create_changeset(module \\ %__MODULE__{}, attrs) do
+    module
     |> cast(attrs, [:operation_type, :operation_id, :amount])
     |> cast_embed(:account, with: &Account.create_changeset/2)
     |> cast_embed(:target, with: &Target.create_changeset/2)

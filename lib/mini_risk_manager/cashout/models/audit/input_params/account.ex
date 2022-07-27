@@ -14,8 +14,8 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Account do
   end
 
   @spec create_changeset(struct(), map()) :: Ecto.Changeset.t()
-  def create_changeset(audit \\ %__MODULE__{}, attrs) do
-    audit
+  def create_changeset(module \\ %__MODULE__{}, attrs) do
+    module
     |> cast(attrs, [:id, :balance])
     |> validate_required([:id, :balance])
   end
