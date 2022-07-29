@@ -15,17 +15,16 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
   end
 
   describe "create_changeset/2" do
-
     test "when missing required attrs return a invalid changeset" do
       changeset = InputParams.create_changeset(%{})
 
       assert errors_on(changeset) == %{
-        account: [@err_cant_be_blank],
-        amount: [@err_cant_be_blank],
-        operation_id: [@err_cant_be_blank],
-        operation_type: [@err_cant_be_blank],
-        target: [@err_cant_be_blank]
-      }
+               account: [@err_cant_be_blank],
+               amount: [@err_cant_be_blank],
+               operation_id: [@err_cant_be_blank],
+               operation_type: [@err_cant_be_blank],
+               target: [@err_cant_be_blank]
+             }
     end
 
     test "when passed all required attrs return a valid changeset", %{params: params} do
@@ -41,7 +40,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
       assert %Target{} = changes.target.data
     end
 
-    test "with invlaid types" do
+    test "with invalid types" do
       params = %{
         account: "integer",
         operation_id: "string",
@@ -53,12 +52,12 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
       changeset = InputParams.create_changeset(params)
 
       assert errors_on(changeset) == %{
-        account: ["is invalid"],
-        operation_id: ["is invalid"],
-        operation_type: ["is invalid"],
-        target: ["is invalid"],
-        amount: ["is invalid"]
-      }
+               account: ["is invalid"],
+               operation_id: ["is invalid"],
+               operation_type: ["is invalid"],
+               target: ["is invalid"],
+               amount: ["is invalid"]
+             }
     end
   end
 end
