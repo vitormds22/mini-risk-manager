@@ -7,6 +7,7 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepository do
   alias MiniRiskManager.Cashout.Models.Audit
   alias MiniRiskManager.Repo
 
+  @spec find(Ecto.UUID.t()) :: {:ok, Audit.t()}
   def find(audit_id) do
     Audit
     |> Repo.get(audit_id)
@@ -19,6 +20,7 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepository do
     end
   end
 
+  @spec sum_amount_last_24h(Ecto.UUID.t(), NaiveDateTime.t(), NaiveDateTime.t()) :: integer()
   def sum_amount_last_24h(account_id, start_date_time, end_date_time)
       when is_bitstring(account_id) do
     query =

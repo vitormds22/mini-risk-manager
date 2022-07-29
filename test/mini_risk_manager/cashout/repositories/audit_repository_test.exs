@@ -38,7 +38,7 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
     test "with valid account_id and timestamps return the sum of all amounts at last 24h", %{
       audit: %{input_params: input_params} = audit
     } do
-      start_date_time = NaiveDateTime.add(audit.inserted_at, -86400)
+      start_date_time = NaiveDateTime.add(audit.inserted_at, -86_400)
 
       assert 80 ==
                AuditRepository.sum_amount_last_24h(
