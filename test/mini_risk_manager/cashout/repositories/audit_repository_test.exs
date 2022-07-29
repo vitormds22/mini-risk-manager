@@ -26,16 +26,26 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
       assert {:error, :audit_not_found} = AuditRepository.find(audit_id)
     end
 
-    test "with account_id is nill return a tuple of error and reason", %{params: %{"id" => id} = params} do
+    test "with account_id is nill return a tuple of error and reason", %{
+      params: %{"id" => id} = params
+    } do
       params = Map.put(params, "id", nil)
       assert {:error, :audit_not_found} = AuditRepository.find(id)
     end
   end
 
   describe "sum_amount_last_24h/3" do
-    test "with valid account_id and timestamps return the sum of all amounts at last 24h", %{audit: %{input_params: input_params} = audit} do
+    test "with valid account_id and timestamps return the sum of all amounts at last 24h", %{
+      audit: %{input_params: input_params} = audit
+    } do
       start_date_time = NaiveDateTime.add(audit.inserted_at, -86400)
-      assert 80 == AuditRepository.sum_amount_last_24h(input_params.account.id, start_date_time, audit.inserted_at)
+
+      assert 80 ==
+               AuditRepository.sum_amount_last_24h(
+                 input_params.account.id,
+                 start_date_time,
+                 audit.inserted_at
+               )
     end
   end
 end

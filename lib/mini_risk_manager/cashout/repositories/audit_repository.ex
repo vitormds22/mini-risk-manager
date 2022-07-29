@@ -19,7 +19,8 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepository do
     end
   end
 
-  def sum_amount_last_24h(account_id, start_date_time, end_date_time) when is_bitstring(account_id) do
+  def sum_amount_last_24h(account_id, start_date_time, end_date_time)
+      when is_bitstring(account_id) do
     query =
       from a in Audit,
         where:
