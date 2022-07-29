@@ -16,7 +16,7 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
             input_params: mini_risk_manager_audit_input_params_factory(),
             model_input: %{
               operation_type: :inbound_pix_payment,
-              amount: 20,
+              amount: 80,
               balance: 20,
               account_type: :CC,
               sum_amount_last_24h: 40
@@ -36,7 +36,7 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
           %InputParams{
             operation_id: Ecto.UUID.generate(),
             operation_type: :inbound_pix_payment,
-            amount: 20,
+            amount: 80,
             account: mini_risk_manager_audit_account_params_factory(),
             target: mini_risk_manager_audit_target_params_factory()
           },
