@@ -27,8 +27,8 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepository do
       from a in Audit,
         where:
           a.input_params["account"]["id"] == ^account_id and
-            fragment("?", a.inserted_at >= ^start_date_time) and
-            fragment("?", a.inserted_at <= ^end_date_time),
+            a.inserted_at >= ^start_date_time and
+            a.inserted_at <= ^end_date_time,
         select: sum(fragment("(input_params->>'amount')::integer"))
 
     Repo.one(query)
