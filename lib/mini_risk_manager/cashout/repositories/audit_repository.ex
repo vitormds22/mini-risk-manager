@@ -21,17 +21,19 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepository do
   end
 
   @spec sum_amount_last_24h(Ecto.UUID.t(), NaiveDateTime.t()) :: integer()
-  def sum_amount_last_24h(account_id, end_date_time)
-      when is_bitstring(account_id) do
-    start_date_time =  NaiveDateTime.add(end_date_time, -86_400)
+  def sum_amount_last_24h(account_id, end_date_time) when is_bitstring(account_id) do
+    start_date_time = NaiveDateTime.add(end_date_time, -86_400)
+
     query =
       from a in Audit,
+        select: sum(fragment("(input_params->>'amount')::integer")),
         where:
-          a.input_params["account"]["id"] == ^account_id and
-            a.inserted_at >= ^start_date_time and
-            a.inserted_at <= ^end_date_time,
-        select: sum(fragment("(input_params->>'amount')::integer"))
-
+          fragment(
+            "(input_params->'account'->>'id') = ? AND inserted_at >= ? AND inserted_at <= ?",
+            ^account_id,
+            ^start_date_time,
+            ^end_date_time
+          )
     Repo.one(query)
   end
 end
