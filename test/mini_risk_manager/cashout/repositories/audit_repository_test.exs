@@ -1,8 +1,8 @@
 defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
   use MiniRiskManager.DataCase, async: true
 
-  alias MiniRiskManager.Cashout.Repositories.AuditRepository
   alias MiniRiskManager.Cashout.Models.Audit
+  alias MiniRiskManager.Cashout.Repositories.AuditRepository
 
   setup do
     params = string_params_for(:mini_risk_manager_audit)
@@ -35,7 +35,6 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
     test "return the sum of all amounts at last 24h when have the same and different account_id", %{
       audit: %{input_params: input_params}
     } do
-
       insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
       insert(:mini_risk_manager_audit_insert)
       insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
