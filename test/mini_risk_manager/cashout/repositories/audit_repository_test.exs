@@ -14,7 +14,7 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
 
   describe "find/1" do
     test "with valid account_id return a tuple of ok and struct", %{audit: audit} do
-      assert {:ok, audit} = AuditRepository.find(audit.id)
+      assert {:ok, _} = AuditRepository.find(audit.id)
     end
 
     test "with invalid account_id return a tuple of error and reason" do
@@ -26,7 +26,7 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
     test "with account_id is nill return a tuple of error and reason", %{
       params: %{"id" => id} = params
     } do
-      params = Map.put(params, "id", nil)
+      Map.put(params, "id", nil)
       assert {:error, :audit_not_found} = AuditRepository.find(id)
     end
   end
@@ -36,11 +36,11 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
       audit: %{input_params: input_params}
     } do
 
-      audit1 = insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
-      audit2 = insert(:mini_risk_manager_audit_insert)
-      audit3 = insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
-      audit4 = insert(:mini_risk_manager_audit_insert)
-      audit5 = insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
+      insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
+      insert(:mini_risk_manager_audit_insert)
+      insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
+      insert(:mini_risk_manager_audit_insert)
+      insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
 
       first_amount = input_params.amount
 
@@ -55,8 +55,10 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
                AuditRepository.sum_amount_last_24h(input_params.account.id)
     end
 
-    test "with valid account_id and timestamps but haven't register in deb" do
-      assert 0 == AuditRepository.sum_amount_last_24h("e3a33b8e-721c-414a-a9d2-58d172a95625")
+    test "with valid account_id and timestamps but haven't register in db" do
+      account_id = Ecto.UUID.generate()
+
+      assert 0 == AuditRepository.sum_amount_last_24h(account_id)
     end
   end
 end
