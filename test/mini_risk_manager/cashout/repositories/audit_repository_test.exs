@@ -45,7 +45,7 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
     test "with valid account_id and timestamps but haven't register in deb" do
       end_date_time = ~N[2022-07-28 17:47:16]
 
-      assert nil ==
+      assert 0 ==
                AuditRepository.sum_amount_last_24h(
                  "e3a33b8e-721c-414a-a9d2-58d172a95625",
                  end_date_time
