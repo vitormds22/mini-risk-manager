@@ -35,12 +35,9 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
     test "with valid account_id and timestamps return the sum of all amounts at last 24h", %{
       second_audit: %{input_params: input_params} = second_audit
     } do
-      start_date_time = NaiveDateTime.add(second_audit.inserted_at, -86_400)
-
       assert 160 ==
                AuditRepository.sum_amount_last_24h(
                  input_params.account.id,
-                 start_date_time,
                  second_audit.inserted_at
                )
     end
@@ -48,12 +45,9 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
     test "with valid account_id and timestamps but haven't register in deb" do
       end_date_time = ~N[2022-07-28 17:47:16]
 
-      start_date_time = NaiveDateTime.add(end_date_time, -86_400)
-
       assert nil ==
                AuditRepository.sum_amount_last_24h(
                  "e3a33b8e-721c-414a-a9d2-58d172a95625",
-                 start_date_time,
                  end_date_time
                )
     end
