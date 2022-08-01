@@ -2,19 +2,19 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
   use MiniRiskManager.DataCase, async: true
 
   alias MiniRiskManager.Cashout.Repositories.AuditRepository
+  alias MiniRiskManager.Cashout.Models.Audit
 
   setup do
     params = string_params_for(:mini_risk_manager_audit)
 
-    first_audit = insert(:mini_risk_manager_audit_insert)
-    second_audit = insert(:mini_risk_manager_audit_insert)
+    audit = insert(:mini_risk_manager_audit_insert)
 
-    %{second_audit: second_audit, first_audit: first_audit, params: params}
+    %{audit: audit, params: params}
   end
 
   describe "find/1" do
-    test "with valid account_id return a tuple of ok and struct", %{first_audit: first_audit} do
-      assert {:ok, first_audit} = AuditRepository.find(first_audit.id)
+    test "with valid account_id return a tuple of ok and struct", %{audit: audit} do
+      assert {:ok, audit} = AuditRepository.find(audit.id)
     end
 
     test "with invalid account_id return a tuple of error and reason" do
@@ -32,24 +32,31 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
   end
 
   describe "sum_amount_last_24h/3" do
-    test "with valid account_id and timestamps return the sum of all amounts at last 24h", %{
-      second_audit: %{input_params: input_params} = second_audit
+    test "return the sum of all amounts at last 24h when have the same and different account_id", %{
+      audit: %{input_params: input_params}
     } do
-      assert 160 ==
-               AuditRepository.sum_amount_last_24h(
-                 input_params.account.id,
-                 second_audit.inserted_at
-               )
+
+      audit1 = insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
+      audit2 = insert(:mini_risk_manager_audit_insert)
+      audit3 = insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
+      audit4 = insert(:mini_risk_manager_audit_insert)
+      audit5 = insert(:mini_risk_manager_audit_insert, inserted_at: NaiveDateTime.utc_now())
+
+      first_amount = input_params.amount
+
+      second_amount = Enum.random(1..100)
+
+      input_params = Map.put(input_params, :amount, second_amount)
+
+      assert %Audit{input_params: ^input_params} =
+               insert(:mini_risk_manager_audit_insert, %{input_params: input_params})
+
+      assert first_amount + second_amount ==
+               AuditRepository.sum_amount_last_24h(input_params.account.id)
     end
 
     test "with valid account_id and timestamps but haven't register in deb" do
-      end_date_time = ~N[2022-07-28 17:47:16]
-
-      assert 0 ==
-               AuditRepository.sum_amount_last_24h(
-                 "e3a33b8e-721c-414a-a9d2-58d172a95625",
-                 end_date_time
-               )
+      assert 0 == AuditRepository.sum_amount_last_24h("e3a33b8e-721c-414a-a9d2-58d172a95625")
     end
   end
 end
