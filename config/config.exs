@@ -31,12 +31,12 @@ config :mini_risk_manager, MiniRiskManager.Ports.BalanceBlokerPort,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{config_env()}.exs"
-
 # Configures Oban
 config :mini_risk_manager, Oban,
   repo: MiniRiskManager.Repo,
   plugins: [Oban.Plugins.Pruner],
-  queues: [default: 10]
+  queues: [default: 10, balance_bloker: 3]
+
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{config_env()}.exs"
