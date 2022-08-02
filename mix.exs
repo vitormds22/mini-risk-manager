@@ -10,7 +10,11 @@ defmodule MiniRiskManager.MixProject do
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_add_apps: [:mix],
+        plt_file: {:no_warn, "_dialyzer/dialyzer.plt"}
+      ]
     ]
   end
 
@@ -49,7 +53,8 @@ defmodule MiniRiskManager.MixProject do
       {:ex_machina, "~> 2.7.0", only: [:test, :dev], runtime: false},
       {:tesla, "~> 1.4"},
       {:hackney, "~> 1.17"},
-      {:mox, "~> 1.0", only: :test}
+      {:mox, "~> 1.0", only: :test},
+      {:oban, "~> 2.13"}
     ]
   end
 
