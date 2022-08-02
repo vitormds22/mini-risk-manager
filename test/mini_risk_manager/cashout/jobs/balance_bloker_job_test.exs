@@ -7,7 +7,11 @@ defmodule MiniRiskManager.Cashout.Jobs.BalanceBlokerJobTest do
   alias MiniRiskManager.Cashout.Jobs.BalanceBlokerJob
 
   setup do
-    input = string_params_for(:mini_risk_manager_balance_bloker)
+    input =
+      :mini_risk_manager_balance_bloker
+      |> build()
+      |> Jason.encode!()
+      |> Jason.decode!()
 
     %{input: input}
   end

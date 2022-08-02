@@ -10,22 +10,24 @@ defmodule MiniRiskManager.Cashout.Commands.BalanceBlokerTest do
     test "with valid input" do
       input = build(:mini_risk_manager_balance_bloker)
 
-      expect(MiniRiskManager.Ports.BalanceBlokerPortMock, :block_balance, fn %BalanceBlokerInput{
-                                                                               operation_id:
-                                                                                 operation_id,
-                                                                               operation_type:
-                                                                                 operation_type,
-                                                                               amount: amount,
-                                                                               account_id:
-                                                                                 account_id
-                                                                             } ->
-        assert input.operation_id == operation_id
-        assert input.operation_type == operation_type
-        assert input.amount == amount
-        assert input.account_id == account_id
+      expect(
+        MiniRiskManager.Ports.BalanceBlokerPortMock,
+        :block_balance,
+        fn %BalanceBlokerInput{
+             operation_id: operation_id,
+             operation_type: operation_type,
+             amount: amount,
+             account_id: account_id
+           } ->
 
-        :ok
-      end)
+          assert input.operation_id == operation_id
+          assert input.operation_type == operation_type
+          assert input.amount == amount
+          assert input.account_id == account_id
+
+          :ok
+        end
+      )
 
       assert :ok == BalanceBloker.run(input)
     end
