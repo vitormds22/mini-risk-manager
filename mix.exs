@@ -10,7 +10,11 @@ defmodule MiniRiskManager.MixProject do
       compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        plt_add_apps: [:mix],
+        plt_file: {:no_warn, "_dialyzer/dialyzer.plt"}
+      ]
     ]
   end
 
