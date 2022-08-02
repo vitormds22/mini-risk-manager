@@ -13,6 +13,8 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
         merge_attributes(
           %Audit{
             id: Ecto.UUID.generate(),
+            operation_id: mini_risk_manager_audit_input_params_factory().operation_id,
+            operation_type: mini_risk_manager_audit_input_params_factory().operation_type,
             input_params: mini_risk_manager_audit_input_params_factory(),
             model_input: %{
               operation_type: :inbound_pix_payment,
@@ -60,30 +62,6 @@ defmodule MiniRiskManager.Factory.Cashout.AuditsFactory do
             document: "Teste Factory",
             account_code: "XPTO-0",
             account_type: :CC
-          },
-          params
-        )
-      end
-
-      def mini_risk_manager_audit_insert_factory(params \\ %{}) do
-        merge_attributes(
-          %Audit{
-            id: Ecto.UUID.generate(),
-            operation_id: mini_risk_manager_audit_input_params_factory().operation_id,
-            operation_type: mini_risk_manager_audit_input_params_factory().operation_type,
-            input_params: mini_risk_manager_audit_input_params_factory(),
-            model_input: %{
-              operation_type: :inbound_pix_payment,
-              amount: Enum.random(1..200),
-              balance: Enum.random(1..200),
-              account_type: :CC,
-              sum_amount_last_24h: 40
-            },
-            model_response: %{
-              is_valid: true,
-              metadata: %{test: "Teste Factory"}
-            },
-            is_valid: true
           },
           params
         )
