@@ -6,7 +6,7 @@ defmodule MiniRiskManager.Factory.Ports.BalanceBlokerFactory do
     quote location: :keep do
       alias MiniRiskManager.Ports.Types.BalanceBlokerInput
 
-      def mini_risk_manager_balance_bloker_factory() do
+      def mini_risk_manager_balance_bloker_factory do
         %BalanceBlokerInput{
           operation_id: Ecto.UUID.generate(),
           operation_type: :inbound_external_transfer,

@@ -11,6 +11,7 @@ defmodule MiniRiskManager.Cashout.Jobs.BalanceBlokerJobTest do
 
     %{input: input}
   end
+
   describe "perform/1" do
     test "with valid input", %{input: input} do
       expect(MiniRiskManager.Ports.BalanceBlokerPortMock, :block_balance, fn _ ->

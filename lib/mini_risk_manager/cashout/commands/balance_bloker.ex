@@ -8,7 +8,6 @@ defmodule MiniRiskManager.Cashout.Commands.BalanceBloker do
 
   @spec run(BalanceBlokerInput.t()) :: :ok | :request_failed
   def run(balance_bloker_input) do
-    balance_bloker_input
-    |> BalanceBlokerPort.block_balance()
+    BalanceBlokerPort.block_balance(balance_bloker_input)
   end
 end
