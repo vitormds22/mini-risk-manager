@@ -27,8 +27,8 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Port/adpter ModelPort :heavy_check_mark:
   * Port/adpter BalanceBlockerPort :heavy_check_mark:
   * Aggregator para audit :heavy_check_mark:
-  * Repository para audit :man_technologist:
-  * Command para bloquear saldo
+  * Repository para audit :heavy_check_mark:
+  * Command para bloquear saldo :man_technologist:
   * Job para bloquear saldo
   * Command para validar o risco
   * Rota de serviço
