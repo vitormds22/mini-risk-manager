@@ -10,6 +10,8 @@ defmodule MiniRiskManager.Application do
     children = [
       # Start the Ecto repository
       MiniRiskManager.Repo,
+      # Start the Oban
+      {Oban, Application.fetch_env!(:mini_risk_manager, Oban)},
       # Start the Telemetry supervisor
       MiniRiskManagerWeb.Telemetry,
       # Start the PubSub system
