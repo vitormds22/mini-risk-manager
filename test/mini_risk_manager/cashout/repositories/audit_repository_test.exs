@@ -1,7 +1,6 @@
 defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
   use MiniRiskManager.DataCase, async: true
 
-  alias MiniRiskManager.Cashout.Models.Audit
   alias MiniRiskManager.Cashout.Repositories.AuditRepository
 
   setup do
@@ -41,49 +40,36 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepositoryTest do
       insert(:mini_risk_manager_audit)
       insert(:mini_risk_manager_audit)
 
-      first_amount = input_params.amount
+      amount1 = input_params.amount
+      amount2 = Enum.random(1..100)
 
-      second_amount = Enum.random(1..100)
+      input_params = Map.put(input_params, :amount, amount2)
 
-      input_params = Map.put(input_params, :amount, second_amount)
+      insert(:mini_risk_manager_audit, %{input_params: input_params})
 
-      %Audit{input_params: ^input_params} =
-        insert(:mini_risk_manager_audit, %{input_params: input_params})
-
-      assert first_amount + second_amount ==
+      assert amount1 + amount2 ==
                AuditRepository.sum_amount_last_24h(input_params.account.id)
     end
 
     test "with valid account_id but date time out of the range 24h", %{
       audit: %{input_params: input_params} = audit
     } do
-      first_amount = input_params.amount
-      second_amount = Enum.random(1..100)
+      amount1 = input_params.amount
+      amount2 = Enum.random(1..100)
 
-      first_date_time = audit.inserted_at
-      second_date_time = NaiveDateTime.add(first_date_time, -100)
+      inserted_at1 = audit.inserted_at
+      inserted_at2 = NaiveDateTime.add(inserted_at1, -100)
+      inserted_at3 = NaiveDateTime.add(inserted_at1, -86_500)
+      inserted_at4 = NaiveDateTime.add(inserted_at1, 1000)
 
-      third_date_time = NaiveDateTime.add(first_date_time, -86_500)
-      fourth_date_time = NaiveDateTime.add(first_date_time, 1000)
+      input_params2 = Map.put(input_params, :amount, amount2)
 
-      input_params = Map.put(input_params, :amount, second_amount)
+      insert(:mini_risk_manager_audit, %{input_params: input_params2})
+      insert(:mini_risk_manager_audit, %{inserted_at: inserted_at2})
+      insert(:mini_risk_manager_audit, %{input_params: input_params2, inserted_at: inserted_at3})
+      insert(:mini_risk_manager_audit, %{input_params: input_params2, inserted_at: inserted_at4})
 
-      %Audit{input_params: ^input_params} =
-        insert(:mini_risk_manager_audit, %{input_params: input_params})
-
-      audit = Map.put(audit, :inserted_at, second_date_time)
-
-      %Audit{} = insert(:mini_risk_manager_audit, %{inserted_at: second_date_time})
-
-      audit = Map.put(audit, :inserted_at, third_date_time)
-      %Audit{} = insert(:mini_risk_manager_audit, %{inserted_at: third_date_time})
-
-      audit = Map.put(audit, :inserted_at, fourth_date_time)
-      %Audit{} = insert(:mini_risk_manager_audit, %{inserted_at: fourth_date_time})
-
-      refute audit.inserted_at == first_date_time
-
-      assert first_amount + second_amount ==
+      assert amount1 + amount2 ==
                AuditRepository.sum_amount_last_24h(input_params.account.id)
     end
 
