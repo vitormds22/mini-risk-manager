@@ -8,7 +8,18 @@ defmodule MiniRiskManager.Cashout.Jobs.BalanceBlokerJob do
 
   require Logger
   @impl Oban.Worker
-  def perform(%Oban.Job{args: %BalanceBlokerInput{} = balance_bloker_input}) do
+  def perform(%Oban.Job{args: %{
+    "operation_id" => operation_id,
+    "operation_type" => operation_type,
+    "amount" => amount,
+    "account_id" => account_id
+  }}) do
+    balance_bloker_input = %BalanceBlokerInput{
+      operation_id: operation_id,
+      operation_type: operation_type,
+      amount: amount,
+      account_id: account_id
+    }
     BalanceBloker.run(balance_bloker_input)
   end
 end
