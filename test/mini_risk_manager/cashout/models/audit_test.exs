@@ -22,7 +22,7 @@ defmodule MiniRiskManager.Cashout.Models.AuditTest do
                input_params: [@err_cant_be_blank],
                is_valid: [@err_cant_be_blank],
                model_input: [@err_cant_be_blank],
-               model_response: [@err_cant_be_blank],
+               model_response: [@err_cant_be_blank]
              }
     end
 
@@ -47,17 +47,17 @@ defmodule MiniRiskManager.Cashout.Models.AuditTest do
         is_valid: "string",
         model_input: "string",
         model_response: "string",
-        input_params: "string",
+        input_params: "string"
       }
 
       changeset = Audit.create_changeset(params)
 
       assert errors_on(changeset) == %{
-        input_params: ["is invalid"],
-        is_valid: ["is invalid"],
-        model_input: ["is invalid"],
-        model_response: ["is invalid"]
-      }
+               input_params: ["is invalid"],
+               is_valid: ["is invalid"],
+               model_input: ["is invalid"],
+               model_response: ["is invalid"]
+             }
     end
 
     test "when not change operation columns", %{params: params} do

@@ -12,15 +12,15 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.AccountTest do
   describe "create_changeset/2" do
     test "when missing required attrs return a invalid changeset" do
       changeset = Account.create_changeset(%{})
+
       assert errors_on(changeset) == %{
-        id: [@err_cant_be_blank],
-        balance: [@err_cant_be_blank],
-      }
+               id: [@err_cant_be_blank],
+               balance: [@err_cant_be_blank]
+             }
     end
 
     test "when passed all required attrs return a valid changeset", %{params: params} do
-      assert %Ecto.Changeset{changes: changes, valid?: true} =
-               Account.create_changeset(params)
+      assert %Ecto.Changeset{changes: changes, valid?: true} = Account.create_changeset(params)
 
       assert changes.id == params.id
       assert changes.balance == params.balance
@@ -35,9 +35,9 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.AccountTest do
       changeset = Account.create_changeset(params)
 
       assert errors_on(changeset) == %{
-        id: ["is invalid"],
-        balance: ["is invalid"],
-      }
+               id: ["is invalid"],
+               balance: ["is invalid"]
+             }
     end
   end
 end
