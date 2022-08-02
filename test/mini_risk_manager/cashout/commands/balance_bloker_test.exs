@@ -7,7 +7,7 @@ defmodule MiniRiskManager.Cashout.Commands.BalanceBlokerTest do
   alias MiniRiskManager.Ports.Types.BalanceBlokerInput
 
   describe "run/1" do
-    test "with valid input" do
+    test "when port response is valid and return ok" do
       input = build(:mini_risk_manager_balance_bloker)
 
       expect(
@@ -32,7 +32,7 @@ defmodule MiniRiskManager.Cashout.Commands.BalanceBlokerTest do
       assert :ok == BalanceBloker.run(input)
     end
 
-    test "with invalid input" do
+    test "when port response is error and reason" do
       expect(MiniRiskManager.Ports.BalanceBlokerPortMock, :block_balance, fn _ ->
         {:error, :request_failed}
       end)
