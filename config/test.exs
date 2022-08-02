@@ -36,3 +36,5 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configures Oban
 config :mini_risk_manager, Oban, testing: :inline
+
+config :ex_unit, capture_log: true
