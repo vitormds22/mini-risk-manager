@@ -29,6 +29,6 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Aggregator para audit :heavy_check_mark:
   * Repository para audit :heavy_check_mark:
   * Command para bloquear saldo :man_technologist:
-  * Job para bloquear saldo
+  * Job para bloquear saldo :man_technologist:
   * Command para validar o risco
   * Rota de serviço
