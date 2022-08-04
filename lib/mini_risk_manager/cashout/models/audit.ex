@@ -10,6 +10,8 @@ defmodule MiniRiskManager.Cashout.Models.Audit do
 
   @type t() :: %__MODULE__{
           id: Ecto.UUID.t(),
+          operation_id: Ecto.UUID.t(),
+          operation_type: String.t(),
           input_params: map(),
           model_input: map(),
           model_response: map(),

@@ -19,7 +19,6 @@ defmodule MiniRiskManager.Cashout.Commands.BalanceBlokerTest do
              amount: amount,
              account_id: account_id
            } ->
-
           assert input.operation_id == operation_id
           assert input.operation_type == operation_type
           assert input.amount == amount
