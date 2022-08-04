@@ -4,4 +4,5 @@ defmodule MiniRiskManager.Factory do
 
   use MiniRiskManager.Factory.Cashout.AuditsFactory
   use MiniRiskManager.Factory.Ports.BalanceBlokerFactory
+  use MiniRiskManager.Factory.Ports.ModelFactory
 end
