@@ -16,7 +16,78 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
 
   describe "create_changeset/2" do
     test "when missing required attrs return a invalid changeset" do
-      changeset = InputParams.create_changeset(%{})
+      assert {:error, %Ecto.Changeset{valid?: false}} = InputParams.create_changeset(%{})
+    end
+
+    test "when passed all required attrs return a valid changeset", %{params: params} do
+      assert {:ok, %InputParams{} = input_params} = InputParams.create_changeset(params)
+
+      assert input_params.account.balance == params.account.balance
+      assert input_params.account.id == params.account.id
+
+      assert input_params.target.account_code == params.target.account_code
+      assert input_params.target.account_type == params.target.account_type
+      assert input_params.target.document == params.target.document
+
+      assert input_params.amount == params.amount
+      assert input_params.operation_id == params.operation_id
+      assert input_params.operation_type == params.operation_type
+
+      assert %Account{} = input_params.account
+      assert %Target{} = input_params.target
+    end
+
+    test "with invalid types" do
+      params = %{
+        account: "integer",
+        operation_id: "string",
+        operation_type: "string",
+        target: "string",
+        amount: "string"
+      }
+
+      assert {:error,
+              %Ecto.Changeset{
+                valid?: false,
+                errors: [
+                  target: {"is invalid", [validation: :embed, type: :map]},
+                  account: {"is invalid", [validation: :embed, type: :map]},
+                  operation_type:
+                    {"is invalid",
+                     [
+                       type:
+                         {:parameterized, Ecto.Enum,
+                          %{
+                            mappings: [
+                              inbound_pix_payment: "inbound_pix_payment",
+                              inbound_external_transfer: "inbound_external_transfer"
+                            ],
+                            on_cast: %{
+                              "inbound_external_transfer" => :inbound_external_transfer,
+                              "inbound_pix_payment" => :inbound_pix_payment
+                            },
+                            on_dump: %{
+                              inbound_external_transfer: "inbound_external_transfer",
+                              inbound_pix_payment: "inbound_pix_payment"
+                            },
+                            on_load: %{
+                              "inbound_external_transfer" => :inbound_external_transfer,
+                              "inbound_pix_payment" => :inbound_pix_payment
+                            },
+                            type: :string
+                          }},
+                       validation: :cast
+                     ]},
+                  operation_id: {"is invalid", [type: Ecto.UUID, validation: :cast]},
+                  amount: {"is invalid", [type: :integer, validation: :cast]}
+                ]
+              }} = InputParams.create_changeset(params)
+    end
+  end
+
+  describe "load_for_audit/2" do
+    test "when missing required attrs return a invalid changeset" do
+      changeset = InputParams.load_for_audit(%{})
 
       assert errors_on(changeset) == %{
                account: [@err_cant_be_blank],
@@ -28,7 +99,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
     end
 
     test "when passed all required attrs return a valid changeset", %{params: params} do
-      assert %Ecto.Changeset{changes: changes, valid?: true} = InputParams.create_changeset(params)
+      assert %Ecto.Changeset{changes: changes, valid?: true} = InputParams.load_for_audit(params)
 
       assert changes.account.changes == params.account
       assert changes.target.changes == params.target
@@ -49,7 +120,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
         amount: "string"
       }
 
-      changeset = InputParams.create_changeset(params)
+      changeset = InputParams.load_for_audit(params)
 
       assert errors_on(changeset) == %{
                account: ["is invalid"],
@@ -59,5 +130,5 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
                amount: ["is invalid"]
              }
     end
-  end
+end
 end
