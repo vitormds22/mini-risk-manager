@@ -37,6 +37,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams do
     |> apply_action(:insert)
   end
 
+  @spec load_for_audit(struct(), map()) :: Ecto.Changeset.t()
   def load_for_audit(module \\ %__MODULE__{}, attrs) do
     module
     |> cast(attrs, [:operation_type, :operation_id, :amount])

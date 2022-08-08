@@ -193,6 +193,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
           {:ok, false_output}
         end
       )
+
       assert %{"is_valid" => false} = Validation.run(input_params2)
     end
   end

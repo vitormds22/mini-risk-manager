@@ -6,8 +6,8 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
   alias Ecto.Multi
   alias MiniRiskManager.Cashout.Aggregates.AuditAggregate
   alias MiniRiskManager.Cashout.Jobs.BalanceBlokerJob
-  alias MiniRiskManager.Cashout.Repositories.AuditRepository
   alias MiniRiskManager.Cashout.Models.Audit.InputParams
+  alias MiniRiskManager.Cashout.Repositories.AuditRepository
   alias MiniRiskManager.Ports.ModelPort
   alias MiniRiskManager.Ports.Types.ModelInput
   alias MiniRiskManager.Repo
@@ -52,7 +52,6 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
             %{is_valid: false}
 
           {:error, :audit, invalid_changeset, _} ->
-
             duplicated_audit =
               AuditRepository.get_audit_by_operation_id_and_operation_type(
                 invalid_changeset.changes.operation_id,
@@ -72,7 +71,7 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
   end
 
   defp create_audit_input(model_input, input_params, model_response) do
-    %{
+    AuditAggregate.create_audit(%{
       operation_id: input_params.operation_id,
       operation_type: input_params.operation_type,
       model_input: model_input,
@@ -85,8 +84,7 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
         operation_type: input_params.operation_type,
         target: Map.from_struct(input_params.target)
       }
-    }
-    |> AuditAggregate.create_audit()
+    })
   end
 
   defp create_balance_blok_job(params) do
