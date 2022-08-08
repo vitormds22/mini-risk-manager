@@ -1,93 +1,93 @@
 defmodule MiniRiskManager.Cashout.Commands.Validation do
   @moduledoc """
-  Command for `MiniRiskManager.Ports.ModelPort` account
+  Command for risk validation
   """
 
   alias Ecto.Multi
   alias MiniRiskManager.Cashout.Aggregates.AuditAggregate
   alias MiniRiskManager.Cashout.Jobs.BalanceBlokerJob
   alias MiniRiskManager.Cashout.Repositories.AuditRepository
+  alias MiniRiskManager.Cashout.Models.Audit.InputParams
   alias MiniRiskManager.Ports.ModelPort
   alias MiniRiskManager.Ports.Types.ModelInput
   alias MiniRiskManager.Ports.Types.ModelResponse
   alias MiniRiskManager.Repo
 
-  @spec run(map()) ::
-          {:ok, ModelResponse.t()} | {:error, :request_failed}
-  def run(
-        %{
-          "operation_type" => operation_type,
-          "amount" => amount,
-          "account" => %{"id" => account_id, "balance" => balance},
-          "target" => %{
-            "account_type" => account_type
-          }
-        } = input_params
-      ) do
-    model_input = %ModelInput{
-      operation_type: operation_type,
-      amount: amount,
-      balance: balance,
-      account_type: account_type,
-      sum_amount_last_24h: AuditRepository.sum_amount_last_24h(account_id)
-    }
+  require Logger
 
-    model_input
-    |> ModelPort.call_model()
+  @spec run(map()) :: {:ok, map()} | {:error, :request_failed | :save_failed}
+  def run(params) do
+    params
+    |> InputParams.create_changeset()
     |> case do
-      {:ok, %ModelResponse{is_valid: true} = model_response} ->
-        AuditAggregate.create_audit(create_audit_input(model_input, input_params, model_response))
-
-        %ModelResponse{is_valid: true}
-
-      {:ok, %ModelResponse{is_valid: false} = model_response} ->
-        multi =
-          Multi.new()
-          |> Multi.run(:audit, fn _, _ ->
-            AuditAggregate.create_audit(
-              create_audit_input(model_input, input_params, model_response)
-            )
-          end)
-          |> Multi.run(:job, fn _, %{audit: audit} ->
-            job_params = create_job_params(audit)
-
-            job_params
-            |> BalanceBlokerJob.new()
-            |> Oban.insert()
-          end)
-
-        case Repo.transaction(multi) do
-          {:ok, _transaction} ->
-            %ModelResponse{is_valid: false}
-
-          {:error, changeset} ->
-            {:error, changeset}
-        end
-
-      {:error, reason} ->
-        {:error, reason}
+      {:ok, input_params} -> call_model(input_params, params)
+      {:error, changeset} -> {:error, changeset}
     end
   end
 
-  @spec create_audit_input(ModelInput.t(), map(), ModelResponse.t()) :: map()
-  def create_audit_input(model_input, input_params, model_response) do
+  defp call_model(input_params, model_input) do
+    %ModelInput{
+      operation_type: input_params.operation_type,
+      amount: input_params.amount,
+      balance: input_params.account.balance,
+      account_type: input_params.target.account_type,
+      sum_amount_last_24h: AuditRepository.sum_amount_last_24h(input_params.account.id)
+    }
+    |> ModelPort.call_model()
+    |> case do
+      {:ok, %{is_valid: true} = response} ->
+        create_audit_input(model_input, input_params, response)
+
+        %{is_valid: true}
+
+      {:ok, %{is_valid: false} = response} ->
+        multi =
+          Multi.new()
+          |> Multi.run(:audit, fn _, _ ->
+            create_audit_input(model_input, input_params, response)
+          end)
+          |> Multi.run(:job, fn _, %{audit: audit} -> create_balance_blok_job(audit) end)
+
+        case Repo.transaction(multi) do
+          {:ok, _transaction} ->
+            %{is_valid: false}
+
+          err ->
+            Logger.error("#{__MODULE__}.run save failed. Error: #{inspect(err)}")
+            {:error, :save_failed}
+        end
+
+      {:error, :request_failed} ->
+        {:error, :request_failed}
+    end
+  end
+
+  defp create_audit_input(model_input, input_params, model_response) do
     %{
-      operation_id: input_params["operation_id"],
-      operation_type: input_params["operation_type"],
+      operation_id: input_params.operation_id,
+      operation_type: input_params.operation_type,
       model_input: model_input,
       model_response: model_response,
       is_valid: model_response.is_valid,
-      input_params: input_params
+      input_params: %{
+        account: Map.from_struct(input_params.account),
+        amount: input_params.amount,
+        operation_id: input_params.operation_id,
+        operation_type: input_params.operation_type,
+        target: Map.from_struct(input_params.target)
+      }
     }
+    |> AuditAggregate.create_audit()
   end
 
-  @spec create_job_params(MiniRiskManager.Cashout.Models.Audit.t()) :: map()
-  def create_job_params(params) do
+  defp create_balance_blok_job(params) do
     %{
       operation_id: params.operation_id,
       operation_type: params.operation_type,
       amount: params.input_params.amount,
       account_id: params.input_params.account.id
     }
+    |> BalanceBlokerJob.new()
+    |> Oban.insert()
   end
 end
