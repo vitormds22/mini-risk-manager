@@ -6,7 +6,6 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
   alias MiniRiskManager.Cashout.Commands.Validation
   alias MiniRiskManager.Ports.Types.ModelInput
 
-
   setup do
     audit = build(:mini_risk_manager_audit)
     false_output = %{is_valid: false}
@@ -29,7 +28,13 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
       )
 
     assert [] = all_enqueued()
-    %{input_params: input_params, false_output: false_output, true_output: true_output, audit: audit}
+
+    %{
+      input_params: input_params,
+      false_output: false_output,
+      true_output: true_output,
+      audit: audit
+    }
   end
 
   describe "run/1" do
@@ -54,10 +59,12 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
 
       assert true_output == Validation.run(input)
       assert MiniRiskManager.Repo.aggregate(MiniRiskManager.Cashout.Models.Audit, :count, :id) == 1
-
     end
 
-    test "when the port response is false returns map with is_valid false", %{input_params: input_params, false_output: false_output} do
+    test "when the port response is false returns map with is_valid false", %{
+      input_params: input_params,
+      false_output: false_output
+    } do
       expect(
         MiniRiskManager.Ports.ModelPortMock,
         :call_model,
@@ -76,10 +83,12 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
 
       assert false_output == Validation.run(input_params)
       assert MiniRiskManager.Repo.aggregate(MiniRiskManager.Cashout.Models.Audit, :count, :id) == 1
-
     end
 
-    test "when the port response is false, the job is enqueued", %{input_params: input_params, false_output: false_output} do
+    test "when the port response is false, the job is enqueued", %{
+      input_params: input_params,
+      false_output: false_output
+    } do
       expect(
         MiniRiskManager.Ports.ModelPortMock,
         :call_model,
@@ -94,7 +103,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
 
           {:ok, false_output}
         end
-        )
+      )
 
       assert false_output == Validation.run(input_params)
 
@@ -126,7 +135,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
 
           {:error, :request_failed}
         end
-        )
+      )
 
       assert {:error, :request_failed} == Validation.run(input_params)
     end
@@ -135,5 +144,56 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
       assert {:error, %Ecto.Changeset{valid?: false}} = Validation.run(%{})
     end
 
+    test "when duplicated operation and operation is sent, it returns the model response that already exists",
+         %{false_output: false_output} do
+      audit = string_params_for(:mini_risk_manager_audit)
+
+      input_params2 =
+        string_params_for(:mini_risk_manager_audit_input_params,
+          operation_id: audit["operation_id"],
+          operation_type: audit["operation_type"]
+        )
+
+      input_params =
+        string_params_for(:mini_risk_manager_audit_input_params,
+          operation_id: audit["operation_id"],
+          operation_type: audit["operation_type"]
+        )
+
+      expect(
+        MiniRiskManager.Ports.ModelPortMock,
+        :call_model,
+        fn %ModelInput{
+             operation_type: operation_type,
+             amount: amount,
+             account_type: account_type
+           } ->
+          assert input_params["operation_type"] == operation_type
+          assert input_params["amount"] == amount
+          assert input_params["target"]["account_type"] == account_type
+
+          {:ok, false_output}
+        end
+      )
+
+      assert false_output = Validation.run(input_params)
+
+      expect(
+        MiniRiskManager.Ports.ModelPortMock,
+        :call_model,
+        fn %ModelInput{
+             operation_type: operation_type,
+             amount: amount,
+             account_type: account_type
+           } ->
+          assert input_params2["operation_type"] == operation_type
+          assert input_params2["amount"] == amount
+          assert input_params2["target"]["account_type"] == account_type
+
+          {:ok, false_output}
+        end
+      )
+      assert %{"is_valid" => false} = Validation.run(input_params2)
+    end
   end
 end

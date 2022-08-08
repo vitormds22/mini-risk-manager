@@ -130,5 +130,5 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
                amount: ["is invalid"]
              }
     end
-end
+  end
 end
