@@ -10,7 +10,6 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
   alias MiniRiskManager.Cashout.Models.Audit.InputParams
   alias MiniRiskManager.Ports.ModelPort
   alias MiniRiskManager.Ports.Types.ModelInput
-  alias MiniRiskManager.Ports.Types.ModelResponse
   alias MiniRiskManager.Repo
 
   require Logger
@@ -51,6 +50,16 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
         case Repo.transaction(multi) do
           {:ok, _transaction} ->
             %{is_valid: false}
+
+          {:error, :audit, invalid_changeset, _} ->
+
+            duplicated_audit =
+              AuditRepository.get_audit_by_operation_id_and_operation_type(
+                invalid_changeset.changes.operation_id,
+                invalid_changeset.changes.operation_type
+              )
+
+            duplicated_audit.model_response
 
           err ->
             Logger.error("#{__MODULE__}.run save failed. Error: #{inspect(err)}")
