@@ -42,4 +42,11 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepository do
     )
     |> Repo.one()
   end
+
+  def get_audit_by_operation_id_and_operation_type(operation_id, operation_type) do
+    Audit
+    |> where(operation_id: ^operation_id)
+    |> where(operation_type: ^operation_type)
+    |> Repo.one!()
+  end
 end
