@@ -14,13 +14,13 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
     %{params: params}
   end
 
-  describe "create_changeset/2" do
+  describe "validate/2" do
     test "when missing required attrs return a invalid changeset" do
-      assert {:error, %Ecto.Changeset{valid?: false}} = InputParams.create_changeset(%{})
+      assert {:error, %Ecto.Changeset{valid?: false}} = InputParams.validate(%{})
     end
 
     test "when passed all required attrs return a valid changeset", %{params: params} do
-      assert {:ok, %InputParams{} = input_params} = InputParams.create_changeset(params)
+      assert {:ok, %InputParams{} = input_params} = InputParams.validate(params)
 
       assert input_params.account.balance == params.account.balance
       assert input_params.account.id == params.account.id
@@ -81,13 +81,13 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
                   operation_id: {"is invalid", [type: Ecto.UUID, validation: :cast]},
                   amount: {"is invalid", [type: :integer, validation: :cast]}
                 ]
-              }} = InputParams.create_changeset(params)
+              }} = InputParams.validate(params)
     end
   end
 
-  describe "load_for_audit/2" do
+  describe "create_changeset/2" do
     test "when missing required attrs return a invalid changeset" do
-      changeset = InputParams.load_for_audit(%{})
+      changeset = InputParams.create_changeset(%{})
 
       assert errors_on(changeset) == %{
                account: [@err_cant_be_blank],
@@ -99,7 +99,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
     end
 
     test "when passed all required attrs return a valid changeset", %{params: params} do
-      assert %Ecto.Changeset{changes: changes, valid?: true} = InputParams.load_for_audit(params)
+      assert %Ecto.Changeset{changes: changes, valid?: true} = InputParams.create_changeset(params)
 
       assert changes.account.changes == params.account
       assert changes.target.changes == params.target
@@ -120,7 +120,7 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParamsTest do
         amount: "string"
       }
 
-      changeset = InputParams.load_for_audit(params)
+      changeset = InputParams.create_changeset(params)
 
       assert errors_on(changeset) == %{
                account: ["is invalid"],

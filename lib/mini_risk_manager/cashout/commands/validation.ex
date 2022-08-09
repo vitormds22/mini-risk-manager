@@ -14,10 +14,10 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
 
   require Logger
 
-  @spec run(map()) :: {:ok, map()} | {:error, :request_failed | :save_failed}
+  @spec run(map()) :: {:ok, boolean()} | {:error, :request_failed | :save_failed}
   def run(params) do
     params
-    |> InputParams.create_changeset()
+    |> InputParams.validate()
     |> case do
       {:ok, input_params} -> call_model(input_params, params)
       {:error, changeset} -> {:error, changeset}
