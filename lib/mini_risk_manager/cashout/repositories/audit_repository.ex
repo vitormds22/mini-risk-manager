@@ -43,7 +43,7 @@ defmodule MiniRiskManager.Cashout.Repositories.AuditRepository do
     |> Repo.one()
   end
 
-  @spec get_audit_by_operation_id_and_operation_type(Ecto.UUID.t(), String.t()) :: boolean()
+  @spec get_audit_by_operation_id_and_operation_type(Ecto.UUID.t(), String.t()) :: Audit.t()
   def get_audit_by_operation_id_and_operation_type(operation_id, operation_type) do
     Audit
     |> where(operation_id: ^operation_id)
