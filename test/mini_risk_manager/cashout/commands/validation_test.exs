@@ -144,6 +144,36 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
       assert {:error, %Ecto.Changeset{valid?: false}} = Validation.run(%{})
     end
 
+    test "with invalid audit returns error and invalid changeset" do
+      audit =
+        string_params_for(:mini_risk_manager_audit,
+          operation_id: 1234,
+          operation_type: "string",
+          model_input: "string",
+          model_response: "string",
+          is_valid: "string",
+          input_params: %{key: "error"}
+        )
+
+      expect(
+        MiniRiskManager.Ports.ModelPortMock,
+        :call_model,
+        fn %ModelInput{
+             operation_type: operation_type,
+             amount: amount,
+             account_type: account_type
+           } ->
+          assert audit["input_params"]["operation_type"] == operation_type
+          assert audit["input_params"]["amount"] == amount
+          assert audit["input_params"]["target"]["account_type"] == account_type
+
+          {:error, %Ecto.Changeset{valid?: false}}
+        end
+      )
+
+      assert {:error, %Ecto.Changeset{valid?: false}} = Validation.run(audit["input_params"])
+    end
+
     test "when duplicated operation and operation is sent, it returns the model response that already exists",
          %{false_output: false_output} do
       audit = string_params_for(:mini_risk_manager_audit)
