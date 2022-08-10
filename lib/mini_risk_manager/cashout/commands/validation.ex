@@ -14,7 +14,7 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
 
   require Logger
 
-  @spec run(map()) :: {:ok, boolean()} | {:error, :request_failed | :save_failed}
+  @spec run(map()) :: {:ok, boolean()} | {:error, :request_failed | :save_failed | Ecto.Changeset.t()}
   def run(params) do
     params
     |> InputParams.validate()
