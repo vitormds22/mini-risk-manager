@@ -7,6 +7,8 @@ defmodule MiniRiskManagerWeb.Router do
 
   scope "/api", MiniRiskManagerWeb do
     pipe_through :api
+
+    post "/cashout", Cashout.AuditController, :model_risk
   end
 
   # Enables LiveDashboard only for development
