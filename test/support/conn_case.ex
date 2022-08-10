@@ -23,7 +23,7 @@ defmodule MiniRiskManagerWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import MiniRiskManagerWeb.ConnCase
-
+      import MiniRiskManager.Factory
       alias MiniRiskManagerWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
