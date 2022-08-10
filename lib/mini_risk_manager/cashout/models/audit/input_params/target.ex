@@ -7,6 +7,12 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Target do
 
   import Ecto.Changeset
 
+  @type t() :: %__MODULE__{
+          document: String.t(),
+          account_code: String.t(),
+          account_type: String.t()
+        }
+
   @primary_key false
   embedded_schema do
     field(:document, :string)

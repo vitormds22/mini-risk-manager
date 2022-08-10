@@ -35,6 +35,6 @@ config :logger, level: :warn
 config :phoenix, :plug_init_mode, :runtime
 
 # Configures Oban
-config :mini_risk_manager, Oban, testing: :inline
+config :mini_risk_manager, Oban, testing: :manual
 
 config :ex_unit, capture_log: true

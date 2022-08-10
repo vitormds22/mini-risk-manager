@@ -10,12 +10,28 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams do
   alias MiniRiskManager.Cashout.Models.Audit.InputParams.Account
   alias MiniRiskManager.Cashout.Models.Audit.InputParams.Target
 
+  @type t :: %__MODULE__{
+          id: Ecto.UUID.t(),
+          operation_id: Ecto.UUID.t(),
+          operation_type: String.t(),
+          amount: integer(),
+          account: Account.t(),
+          target: Target.t()
+        }
+
   embedded_schema do
     field(:operation_type, Ecto.Enum, values: [:inbound_pix_payment, :inbound_external_transfer])
     field(:operation_id, Ecto.UUID)
     field(:amount, :integer)
     embeds_one(:account, Account)
     embeds_one(:target, Target)
+  end
+
+  @spec validate(struct(), map()) :: {:ok, t()} | {:error, Ecto.Changeset.t()}
+  def validate(module \\ %__MODULE__{}, attrs) do
+    module
+    |> create_changeset(attrs)
+    |> apply_action(:insert)
   end
 
   @spec create_changeset(struct(), map()) :: Ecto.Changeset.t()

@@ -7,6 +7,11 @@ defmodule MiniRiskManager.Cashout.Models.Audit.InputParams.Account do
 
   import Ecto.Changeset
 
+  @type t() :: %__MODULE__{
+          id: Ecto.UUID.t(),
+          balance: integer()
+        }
+
   @primary_key false
   embedded_schema do
     field(:id, Ecto.UUID)
