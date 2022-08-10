@@ -54,7 +54,18 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
           {:ok, _transaction} ->
             {:ok, false}
 
-          {:error, :audit, invalid_changeset, _} ->
+          {:error, :audit,
+           %Ecto.Changeset{
+             errors: [
+               operation_id:
+                 {"has already been taken",
+                  [
+                    constraint: :unique,
+                    constraint_name: "audits_operation_id_operation_type_index"
+                  ]}
+             ]
+           } = invalid_changeset, _} ->
+
             duplicated_audit =
               AuditRepository.get_audit_by_operation_id_and_operation_type(
                 invalid_changeset.changes.operation_id,
