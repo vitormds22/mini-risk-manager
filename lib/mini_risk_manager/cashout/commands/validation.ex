@@ -37,7 +37,7 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
       {:ok, %{is_valid: true} = response} ->
         create_audit_input(model_input, input_params, response)
 
-        %{is_valid: true}
+        {:ok, true}
 
       {:ok, %{is_valid: false} = response} ->
         multi =
@@ -49,7 +49,7 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
 
         case Repo.transaction(multi) do
           {:ok, _transaction} ->
-            %{is_valid: false}
+            {:ok, false}
 
           {:error, :audit, invalid_changeset, _} ->
             duplicated_audit =
@@ -58,7 +58,7 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
                 invalid_changeset.changes.operation_type
               )
 
-            duplicated_audit.model_response
+            {:ok, duplicated_audit.model_response["is_valid"]}
 
           err ->
             Logger.error("#{__MODULE__}.run save failed. Error: #{inspect(err)}")
@@ -67,6 +67,7 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
 
       {:error, :request_failed} ->
         {:error, :request_failed}
+
     end
   end
 
