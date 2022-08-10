@@ -57,7 +57,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
         end
       )
 
-      assert true_output == Validation.run(input)
+      assert {:ok, true} == Validation.run(input)
       assert MiniRiskManager.Repo.aggregate(MiniRiskManager.Cashout.Models.Audit, :count, :id) == 1
     end
 
@@ -81,7 +81,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
         end
       )
 
-      assert false_output == Validation.run(input_params)
+      assert {:ok, false} == Validation.run(input_params)
       assert MiniRiskManager.Repo.aggregate(MiniRiskManager.Cashout.Models.Audit, :count, :id) == 1
     end
 
@@ -105,7 +105,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
         end
       )
 
-      assert false_output == Validation.run(input_params)
+      assert {:ok, false} == Validation.run(input_params)
 
       assert_enqueued(
         worker: MiniRiskManager.Cashout.Jobs.BalanceBlokerJob,
@@ -206,7 +206,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
         end
       )
 
-      assert false_output = Validation.run(input_params)
+      assert {:ok, false} = Validation.run(input_params)
 
       expect(
         MiniRiskManager.Ports.ModelPortMock,
@@ -224,7 +224,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
         end
       )
 
-      assert %{"is_valid" => false} = Validation.run(input_params2)
+      assert {:ok, false} = Validation.run(input_params2)
     end
   end
 end
