@@ -4,8 +4,8 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
   import Mox
 
   alias MiniRiskManager.Cashout.Commands.Validation
-  alias MiniRiskManager.Ports.Types.ModelInput
   alias MiniRiskManager.Cashout.Repositories.AuditRepository
+  alias MiniRiskManager.Ports.Types.ModelInput
   alias MiniRiskManager.Repo
 
   setup do
@@ -59,11 +59,15 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
         end
       )
 
-
       assert {:ok, true} == Validation.run(input)
       assert Repo.aggregate(MiniRiskManager.Cashout.Models.Audit, :count, :id) == 1
 
-      audit = AuditRepository.get_audit_by_operation_id_and_operation_type(input["operation_id"], input["operation_type"])
+      audit =
+        AuditRepository.get_audit_by_operation_id_and_operation_type(
+          input["operation_id"],
+          input["operation_type"]
+        )
+
       assert_audit(audit, input)
     end
 
@@ -248,7 +252,6 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
 
     model_response = %{"is_valid" => true}
 
-    IO.inspect(audit)
     assert audit.operation_id == input_params.operation_id
     assert audit.operation_type == input_params.operation_type
     assert audit.input_params == input_params
