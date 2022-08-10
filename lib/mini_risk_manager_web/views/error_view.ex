@@ -9,6 +9,7 @@ defmodule MiniRiskManagerWeb.ErrorView do
   # the template name. For example, "404.json" becomes
   # "Not Found".
 
+  @spec render(String.t(), map()) :: map()
   def render("400.json", _assigns) do
     %{type: "srn:error:invalid"}
   end

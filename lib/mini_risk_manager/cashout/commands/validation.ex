@@ -67,7 +67,6 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
 
       {:error, :request_failed} ->
         {:error, :request_failed}
-
     end
   end
 

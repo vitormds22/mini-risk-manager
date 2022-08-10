@@ -12,18 +12,17 @@ defmodule MiniRiskManagerWeb.Cashout.AuditControllerTest do
         MiniRiskManager.Ports.ModelPortMock,
         :call_model,
         fn _ ->
-
           {:ok, %{is_valid: true}}
         end
       )
 
-      assert %{"is_valid" => true} = post(conn, Routes.audit_path(conn, :model_risk, params))
-      |> json_response(:ok)
+      assert %{"is_valid" => true} =
+               json_response(post(conn, Routes.audit_path(conn, :model_risk, params)), :ok)
     end
 
     test "when the params is invalid return error", %{conn: conn} do
-      assert %{"type" => "srn:error:invalid"} = post(conn, Routes.audit_path(conn, :model_risk, %{}))
-      |> json_response(:bad_request)
+      assert %{"type" => "srn:error:invalid"} =
+               json_response(post(conn, Routes.audit_path(conn, :model_risk, %{})), :bad_request)
     end
 
     test "when the params is invalid return error and request failed", %{conn: conn} do
@@ -33,13 +32,15 @@ defmodule MiniRiskManagerWeb.Cashout.AuditControllerTest do
         MiniRiskManager.Ports.ModelPortMock,
         :call_model,
         fn _ ->
-
           {:error, :request_failed}
         end
       )
 
-      assert %{"type" => "srn:error:internal_server_error"} = post(conn, Routes.audit_path(conn, :model_risk, params))
-      |> json_response(:internal_server_error)
+      assert %{"type" => "srn:error:internal_server_error"} =
+               json_response(
+                 post(conn, Routes.audit_path(conn, :model_risk, params)),
+                 :internal_server_error
+               )
     end
   end
 end

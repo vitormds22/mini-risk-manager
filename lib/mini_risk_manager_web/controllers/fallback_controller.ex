@@ -1,6 +1,7 @@
 defmodule MiniRiskManagerWeb.FallbackController do
   use MiniRiskManagerWeb, :controller
 
+  @spec call(Plug.Conn.t(), {:error, Ecto.Changeset.t()}) :: Plug.Conn.t()
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:bad_request)

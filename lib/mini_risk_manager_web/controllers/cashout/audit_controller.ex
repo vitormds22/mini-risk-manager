@@ -5,16 +5,16 @@ defmodule MiniRiskManagerWeb.Cashout.AuditController do
 
   alias MiniRiskManager.Cashout.Commands.Validation
 
+  @spec model_risk(Plug.Conn.t(), map()) :: map()
   def model_risk(conn, params) do
-    Validation.run(params)
-    |> case do
-        {:ok, result} ->
-          conn
-          |> put_status(:ok)
-          |> render("200.json", result: result)
-        {:error, reason} ->
-          {:error,reason}
-    end
+    case Validation.run(params) do
+      {:ok, result} ->
+        conn
+        |> put_status(:ok)
+        |> render("200.json", result: result)
 
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 end
