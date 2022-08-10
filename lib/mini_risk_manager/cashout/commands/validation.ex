@@ -19,19 +19,21 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
     params
     |> InputParams.validate()
     |> case do
-      {:ok, input_params} -> call_model(input_params, params)
+      {:ok, input_params} -> call_model(input_params)
       {:error, changeset} -> {:error, changeset}
     end
   end
 
-  defp call_model(input_params, model_input) do
-    %ModelInput{
+  defp call_model(input_params) do
+    model_input = %ModelInput{
       operation_type: input_params.operation_type,
       amount: input_params.amount,
       balance: input_params.account.balance,
       account_type: input_params.target.account_type,
       sum_amount_last_24h: AuditRepository.sum_amount_last_24h(input_params.account.id)
     }
+
+    model_input
     |> ModelPort.call_model()
     |> case do
       {:ok, %{is_valid: true} = response} ->
@@ -72,8 +74,6 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
 
   defp create_audit_input(model_input, input_params, model_response) do
     AuditAggregate.create_audit(%{
-      operation_id: input_params.operation_id,
-      operation_type: input_params.operation_type,
       model_input: model_input,
       model_response: model_response,
       is_valid: model_response.is_valid,
