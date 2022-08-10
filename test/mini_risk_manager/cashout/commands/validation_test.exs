@@ -5,11 +5,13 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
 
   alias MiniRiskManager.Cashout.Commands.Validation
   alias MiniRiskManager.Ports.Types.ModelInput
+  alias MiniRiskManager.Cashout.Repositories.AuditRepository
+  alias MiniRiskManager.Repo
 
   setup do
     audit = build(:mini_risk_manager_audit)
-    false_output = %{is_valid: false}
-    true_output = %{is_valid: true}
+    false_output = {:ok, %{is_valid: false}}
+    true_output = {:ok, %{is_valid: true}}
 
     input_params =
       string_params_for(:mini_risk_manager_audit_input_params,
@@ -53,12 +55,16 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
           assert input["amount"] == amount
           assert input["account"]["balance"] == balance
 
-          {:ok, true_output}
+          true_output
         end
       )
 
+
       assert {:ok, true} == Validation.run(input)
-      assert MiniRiskManager.Repo.aggregate(MiniRiskManager.Cashout.Models.Audit, :count, :id) == 1
+      assert Repo.aggregate(MiniRiskManager.Cashout.Models.Audit, :count, :id) == 1
+
+      audit = AuditRepository.get_audit_by_operation_id_and_operation_type(input["operation_id"], input["operation_type"])
+      assert_audit(audit, input)
     end
 
     test "when the port response is false returns map with is_valid false", %{
@@ -77,7 +83,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
           assert input_params["amount"] == amount
           assert input_params["target"]["account_type"] == account_type
 
-          {:ok, false_output}
+          false_output
         end
       )
 
@@ -101,7 +107,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
           assert input_params["amount"] == amount
           assert input_params["target"]["account_type"] == account_type
 
-          {:ok, false_output}
+          false_output
         end
       )
 
@@ -202,7 +208,7 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
           assert input_params["amount"] == amount
           assert input_params["target"]["account_type"] == account_type
 
-          {:ok, false_output}
+          false_output
         end
       )
 
@@ -220,11 +226,39 @@ defmodule MiniRiskManager.Cashout.Commands.ValidationTest do
           assert input_params2["amount"] == amount
           assert input_params2["target"]["account_type"] == account_type
 
-          {:ok, false_output}
+          false_output
         end
       )
 
       assert {:ok, false} = Validation.run(input_params2)
     end
+  end
+
+  defp assert_audit(audit, params) do
+    {:ok, input_params} = MiniRiskManager.Cashout.Models.Audit.InputParams.validate(params)
+    input_params = Map.put(input_params, :id, audit.input_params.id)
+
+    model_input = %ModelInput{
+      operation_type: input_params.operation_type,
+      amount: input_params.amount,
+      balance: input_params.account.balance,
+      account_type: input_params.target.account_type,
+      sum_amount_last_24h: AuditRepository.sum_amount_last_24h(input_params.account.id)
+    }
+
+    model_response = %{"is_valid" => true}
+
+    IO.inspect(audit)
+    assert audit.operation_id == input_params.operation_id
+    assert audit.operation_type == input_params.operation_type
+    assert audit.input_params == input_params
+
+    assert audit.model_input["operation_type"] == to_string(model_input.operation_type)
+    assert audit.model_input["amount"] == model_input.amount
+    assert audit.model_input["balance"] == model_input.balance
+    assert audit.model_input["account_type"] == to_string(model_input.account_type)
+    assert audit.model_input["account_type"] == to_string(model_input.account_type)
+
+    assert audit.model_response == model_response
   end
 end

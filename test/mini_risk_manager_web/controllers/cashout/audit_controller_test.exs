@@ -17,12 +17,12 @@ defmodule MiniRiskManagerWeb.Cashout.AuditControllerTest do
       )
 
       assert %{"is_valid" => true} =
-               json_response(post(conn, Routes.audit_path(conn, :model_risk, params)), :ok)
+               json_response(post(conn, Routes.audit_path(conn, :validate, params)), :ok)
     end
 
     test "when the params is invalid return error", %{conn: conn} do
       assert %{"type" => "srn:error:invalid"} =
-               json_response(post(conn, Routes.audit_path(conn, :model_risk, %{})), :bad_request)
+               json_response(post(conn, Routes.audit_path(conn, :validate, %{})), :bad_request)
     end
 
     test "when the params is invalid return error and request failed", %{conn: conn} do
@@ -38,7 +38,7 @@ defmodule MiniRiskManagerWeb.Cashout.AuditControllerTest do
 
       assert %{"type" => "srn:error:internal_server_error"} =
                json_response(
-                 post(conn, Routes.audit_path(conn, :model_risk, params)),
+                 post(conn, Routes.audit_path(conn, :validate, params)),
                  :internal_server_error
                )
     end
