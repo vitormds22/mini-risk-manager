@@ -64,12 +64,12 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
                     constraint_name: "audits_operation_id_operation_type_index"
                   ]}
              ]
-           } = invalid_changeset, _} ->
+           }, _} ->
 
             duplicated_audit =
               AuditRepository.get_audit_by_operation_id_and_operation_type(
-                invalid_changeset.changes.operation_id,
-                invalid_changeset.changes.operation_type
+                input_params.operation_id,
+                input_params.operation_type
               )
 
             {:ok, duplicated_audit.model_response["is_valid"]}
