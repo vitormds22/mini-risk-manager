@@ -39,49 +39,63 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
     |> case do
       {:ok, %{is_valid: true} = response} ->
         create_audit_input(model_input, input_params, response)
-
         {:ok, true}
 
       {:ok, %{is_valid: false} = response} ->
-        multi =
-          Multi.new()
-          |> Multi.run(:audit, fn _, _ ->
-            create_audit_input(model_input, input_params, response)
-          end)
-          |> Multi.run(:job, fn _, %{audit: audit} -> create_balance_blok_job(audit) end)
-
-        case Repo.transaction(multi) do
-          {:ok, _transaction} ->
-            {:ok, false}
-
-          {:error, :audit,
-           %Ecto.Changeset{
-             errors: [
-               operation_id:
-                 {"has already been taken",
-                  [
-                    constraint: :unique,
-                    constraint_name: "audits_operation_id_operation_type_index"
-                  ]}
-             ]
-           }, _} ->
-
-            duplicated_audit =
-              AuditRepository.get_audit_by_operation_id_and_operation_type(
-                input_params.operation_id,
-                input_params.operation_type
-              )
-
-            {:ok, duplicated_audit.model_response["is_valid"]}
-
-          err ->
-            Logger.error("#{__MODULE__}.run save failed. Error: #{inspect(err)}")
-            {:error, :save_failed}
-        end
+        create_audit_and_job(model_input, input_params, response)
 
       {:error, :request_failed} ->
         {:error, :request_failed}
     end
+  end
+
+  defp create_audit_and_job(model_input, input_params, response) do
+    Multi.new()
+    |> Multi.run(:audit, &create_audit_input(&1, &2, model_input, input_params, response))
+    |> Multi.run(:job, &create_balance_blok_job(&1, &2))
+    |> Repo.transaction()
+    |> case do
+      {:ok, _transaction} ->
+        {:ok, false}
+
+      {:error, :audit,
+       %Ecto.Changeset{
+         errors: [
+           operation_id:
+             {"has already been taken",
+              [
+                constraint: :unique,
+                constraint_name: "audits_operation_id_operation_type_index"
+              ]}
+         ]
+       }, _} ->
+        duplicated_audit =
+          AuditRepository.get_audit_by_operation_id_and_operation_type(
+            input_params.operation_id,
+            input_params.operation_type
+          )
+
+        {:ok, duplicated_audit.model_response["is_valid"]}
+
+      err ->
+        Logger.error("#{__MODULE__}.run save failed. Error: #{inspect(err)}")
+        {:error, :save_failed}
+    end
+  end
+
+  defp create_audit_input(_, _, model_input, input_params, model_response) do
+    AuditAggregate.create_audit(%{
+      model_input: model_input,
+      model_response: model_response,
+      is_valid: model_response.is_valid,
+      input_params: %{
+        account: Map.from_struct(input_params.account),
+        amount: input_params.amount,
+        operation_id: input_params.operation_id,
+        operation_type: input_params.operation_type,
+        target: Map.from_struct(input_params.target)
+      }
+    })
   end
 
   defp create_audit_input(model_input, input_params, model_response) do
@@ -99,12 +113,12 @@ defmodule MiniRiskManager.Cashout.Commands.Validation do
     })
   end
 
-  defp create_balance_blok_job(params) do
+  defp create_balance_blok_job(_, %{audit: audit}) do
     %{
-      operation_id: params.operation_id,
-      operation_type: params.operation_type,
-      amount: params.input_params.amount,
-      account_id: params.input_params.account.id
+      operation_id: audit.operation_id,
+      operation_type: audit.operation_type,
+      amount: audit.input_params.amount,
+      account_id: audit.input_params.account.id
     }
     |> BalanceBlokerJob.new()
     |> Oban.insert()
