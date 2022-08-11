@@ -18,7 +18,7 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
 
-## To do list
+## To do list :heavy_check_mark:
 
   * Configurar credo e dialyzer :heavy_check_mark:
   * Projeto com mix phx.new :heavy_check_mark:
@@ -30,5 +30,5 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Repository para audit :heavy_check_mark:
   * Command para bloquear saldo :heavy_check_mark:
   * Job para bloquear saldo :heavy_check_mark:
-  * Command para validar o risco :man_technologist:
-  * Rota de serviço
+  * Command para validar o risco :heavy_check_mark:
+  * Rota de serviço :heavy_check_mark:
